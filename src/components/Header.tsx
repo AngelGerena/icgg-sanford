@@ -64,7 +64,7 @@ const Header = () => {
               <Users className="h-4 w-4" />
               <span>{t('nav.ministries')}</span>
             </a>
-            <a href="#calendario-eventos" className="flex items-center space-x-1.5 text-gray-300 hover:text-amber-400 transition-colors font-medium">
+            <a href="#calendario" className="flex items-center space-x-1.5 text-gray-300 hover:text-amber-400 transition-colors font-medium">
               <Calendar className="h-4 w-4" />
               <span>{t('nav.events')}</span>
             </a>
