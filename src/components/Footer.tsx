@@ -26,13 +26,13 @@ const Footer = () => {
               {t('footer.description')}
             </p>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/irenegraciaygloria" target="_blank" rel="noopener noreferrer" className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors">
+              <a href="#" className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="https://www.instagram.com/icgg.sanford/" target="_blank" rel="noopener noreferrer" className="bg-pink-600 hover:bg-pink-700 p-3 rounded-full transition-colors">
+              <a href="#" className="bg-pink-600 hover:bg-pink-700 p-3 rounded-full transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="https://www.youtube.com/@IglesiaGraciayGloria" target="_blank" rel="noopener noreferrer" className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors">
+              <a href="#" className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -68,7 +68,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#calendario-eventos" className="text-gray-300 hover:text-white transition-colors">
+                <a href="#events" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.events')}
                 </a>
               </li>

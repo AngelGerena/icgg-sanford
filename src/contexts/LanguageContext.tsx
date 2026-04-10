@@ -180,7 +180,7 @@ const translations = {
   // Events Section
   'events.title': { es: '¡Acompañanos!', en: 'Upcoming Events' },
   'events.description': { es: 'Mantente conectado con todas nuestras actividades y eventos especiales', en: 'Stay connected with all our activities and special events' },
-  'events.calendarTitle': { es: 'Calendario de Eventos', en: 'Events Calendar' },
+  'events.calendarTitle': { es: 'Horarios de Servicios', en: 'Service Schedule' },
   'events.calendarDescription': { es: 'Mantente informado sobre nuestros próximos eventos y actividades especiales', en: 'Stay informed about our upcoming events and special activities' },
   'events.stayInformed': { es: '¡Mantente Informado!', en: 'Stay Informed!' },
   'events.newsletter': { es: 'Suscríbete a nuestro boletín para recibir actualizaciones sobre eventos y actividades', en: 'Subscribe to our newsletter to receive updates about events and activities' },
@@ -267,8 +267,7 @@ const translations = {
   'events.bibleStudyDesc': { es: 'Nueva serie de estudio bíblico "Upside Down" dirigida por la Pastora Irene Familia. Un tiempo de profundización en la Palabra de Dios.', en: 'New Bible study series "Upside Down" led by Pastor Irene Familia. A time of deepening in God\'s Word.' },
   'events.sundayService': { es: 'Servicio de Domingo', en: 'Sunday Service' },
   'events.sept14th': { es: '14 de Septiembre', en: 'Sept 14th' },
-  'events.sundayServiceDesc': { es: 'Nuestro servicio principal de adoración dominical con predicación, alabanza y comunión.', en: 'Our main Sunday worship service with preaching, praise and communion.' },
-  'events.allWelcome': { es: 'Todos bienvenidos', en: 'Everyone welcome' },
+  'events.sundayServiceDesc': { es: 'Nuestro servicio principal de adoración dominical con predicación, alabanza y comunión.', en: 'Our main Sunday worship service with preaching, praise and communion.' },'events.allWelcome': { es: 'Todos bienvenidos', en: 'Everyone welcome' },
   
   // Alineados Section
   'alineados.title': { es: 'Una Nueva Herramienta para Parejas', en: 'A New Tool for Couples' },
@@ -341,8 +340,9 @@ const translations = {
   'newcomers.connectDesc': { es: 'Únete a un grupo pequeño y construye relaciones auténticas', en: 'Join a small group and build authentic relationships' },
   'newcomers.serve': { es: 'Servir', en: 'Serve' },
   'newcomers.serveDesc': { es: 'Descubre tus dones y sirve en nuestros ministerios', en: 'Discover your gifts and serve in our ministries' },
-  'newcomers.events': { es: 'Horario de Servicios', en: 'Service Schedule' },
+  'newcomers.events': { es: 'Eventos', en: 'Events' },
   'newcomers.eventsDesc': { es: 'Mantente conectado con nuestras actividades especiales', en: 'Stay connected with our special activities' },
+  'newcomers.serviceTimesDesc': { es: 'Ven y Vistenos, tu vida jamas sera igual', en: 'Come and Visit Us, your life will never be the same' },
   'newcomers.give': { es: 'Dar', en: 'Give' },
   'newcomers.giveDesc': { es: 'Apoya la misión de la iglesia con tus ofrendas', en: 'Support the church mission with your offerings' },
   'newcomers.whatToExpect': { es: '¿Qué Esperar en Tu Primera Visita?', en: 'What to Expect on Your First Visit?' },

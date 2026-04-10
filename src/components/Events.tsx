@@ -80,6 +80,7 @@ const Events = () => {
               }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
+              {/* Event Image */}
               <div className="relative h-48 overflow-hidden">
                 <div className={`absolute inset-0 bg-gradient-to-br ${event.color} opacity-20`}></div>
                 <img
@@ -96,6 +97,8 @@ const Events = () => {
                 <div className="absolute inset-0 bg-gray-200 hidden items-center justify-center">
                   <div className="h-12 w-12 bg-gray-400 rounded"></div>
                 </div>
+
+                {/* Event Type Badge */}
                 <div className="absolute top-4 right-4">
                   <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                     t(event.typeKey) === t('events.special') ? 'bg-amber-500/90 text-white' :
@@ -107,12 +110,15 @@ const Events = () => {
                   </span>
                 </div>
               </div>
+
+              {/* Event Content */}
               <div className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors">
                     {t(event.titleKey)}
                   </h3>
                 </div>
+
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center space-x-3 text-gray-600">
                     <div className={`p-2 rounded-lg ${event.textColor} bg-current bg-opacity-10`}>
@@ -133,7 +139,9 @@ const Events = () => {
                     <span className="font-medium text-sm leading-relaxed">{event.location}</span>
                   </div>
                 </div>
+
                 <p className="text-gray-700 leading-relaxed mb-4">{t(event.descriptionKey)}</p>
+
                 <div className="flex items-center">
                   <div className="flex items-center space-x-2 text-gray-500">
                     <Users className="h-4 w-4" />
@@ -145,6 +153,7 @@ const Events = () => {
           ))}
         </div>
 
+        {/* Call to Action */}
         <div
           ref={ctaRef}
           className={`text-center transition-all duration-1000 ${
@@ -152,9 +161,7 @@ const Events = () => {
           }`}
         >
           <div className="bg-gradient-to-r from-blue-700 to-blue-800 rounded-2xl shadow-xl p-8 text-white max-w-4xl mx-auto hover:shadow-2xl transition-shadow duration-300">
-            <h3 className="text-3xl font-bold mb-4">
-              ¿Quieres estar al día con nuestros eventos?
-            </h3>
+            <h3 className="text-3xl font-bold mb-4">¿Quieres estar al día con nuestros eventos?</h3>
             <p className="text-xl text-blue-100 mb-6">
               Síguenos en Facebook y nunca te pierdas nuestras actividades especiales
             </p>

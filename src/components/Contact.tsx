@@ -25,6 +25,49 @@ const Contact = () => {
     handleFormSubmissionWithFallback();
   };
 
+  const handleFormSubmission = async () => {
+    setIsSubmitting(true);
+    setSubmitMessage('');
+    
+    try {
+      // Use the deployed Supabase function URL
+      const response = await fetch('/api/contact-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      // Fallback to direct Supabase function if the proxy doesn't exist
+      if (!response.ok && response.status === 404) {
+        const supabaseResponse = await fetch('https://your-project.supabase.co/functions/v1/contact-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        if (supabaseResponse.ok) {
+          setSubmitMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+          setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        } else {
+          throw new Error('Failed to send message');
+        }
+      } else if (response.ok) {
+        setSubmitMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setSubmitMessage('Hubo un error enviando tu mensaje. Por favor envía un email directamente a info@icgg.us o llámanos.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Simple email validation
   const isValidEmail = (email: string) => {
@@ -92,7 +135,46 @@ ${formData.message}
     }
   };
 
+  const originalHandleFormSubmission = async () => {
+    try {
+      // For development/testing, we'll simulate the email being sent
+      console.log('Contact form submission:', formData);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Hubo un error enviando tu mensaje. Por favor intenta de nuevo o contactanos directamente.');
+    }
+  };
 
+  const oldHandleFormSubmission = async () => {
+    try {
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/contact-form`;
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Hubo un error enviando tu mensaje. Por favor intenta de nuevo o contactanos directamente.');
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({

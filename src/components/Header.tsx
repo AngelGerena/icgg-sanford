@@ -64,7 +64,7 @@ const Header = () => {
               <Users className="h-4 w-4" />
               <span>{t('nav.ministries')}</span>
             </a>
-            <a href="#calendario" className="flex items-center space-x-1.5 text-gray-300 hover:text-amber-400 transition-colors font-medium">
+            <a href="#calendar" className="flex items-center space-x-1.5 text-gray-300 hover:text-amber-400 transition-colors font-medium">
               <Calendar className="h-4 w-4" />
               <span>{t('nav.events')}</span>
             </a>
@@ -122,7 +122,7 @@ const Header = () => {
               <span className="text-xs">{t('nav.giving')}</span>
             </a>
             <a
-              href="#calendario-eventos"
+              href="#calendar"
               className="flex flex-col items-center justify-center space-y-1 text-gray-400 hover:text-amber-400 transition-colors"
             >
               <Calendar className="h-5 w-5" />
