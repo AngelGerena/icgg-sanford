@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Users, Heart, Calendar, Gift, MapPin, Coffee, BookOpen, Handshake } from 'lucide-react';
+import { Users, Heart, Calendar, Clock, Gift, MapPin, Coffee, Handshake } from 'lucide-react';
 
 const Newcomers = () => {
   const { t } = useLanguage();
@@ -78,13 +78,13 @@ const Newcomers = () => {
 
           {/* Events Card */}
           <a
-           href="#calendario-eventos"
+           href="#services"
             className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
           >
             <div className="h-2 bg-gradient-to-r from-purple-500 to-purple-600"></div>
             <div className="p-8 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Calendar className="h-8 w-8 text-purple-600" />
+                <Clock className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {t('newcomers.events')}
