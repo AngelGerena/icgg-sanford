@@ -78,7 +78,7 @@ const Newcomers = () => {
 
           {/* Events Card */}
           <a
-            href="#calendario-eventos"
+           href="#calendario-eventos"
             className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
           >
             <div className="h-2 bg-gradient-to-r from-purple-500 to-purple-600"></div>
