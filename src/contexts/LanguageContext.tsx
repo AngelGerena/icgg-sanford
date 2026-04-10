@@ -341,7 +341,7 @@ const translations = {
   'newcomers.connectDesc': { es: 'Únete a un grupo pequeño y construye relaciones auténticas', en: 'Join a small group and build authentic relationships' },
   'newcomers.serve': { es: 'Servir', en: 'Serve' },
   'newcomers.serveDesc': { es: 'Descubre tus dones y sirve en nuestros ministerios', en: 'Discover your gifts and serve in our ministries' },
-  'newcomers.events': { es: 'Eventos', en: 'Events' },
+  'newcomers.events': { es: 'Horario de Servicios', en: 'Service Schedule' },
   'newcomers.eventsDesc': { es: 'Mantente conectado con nuestras actividades especiales', en: 'Stay connected with our special activities' },
   'newcomers.give': { es: 'Dar', en: 'Give' },
   'newcomers.giveDesc': { es: 'Apoya la misión de la iglesia con tus ofrendas', en: 'Support the church mission with your offerings' },
