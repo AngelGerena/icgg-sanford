@@ -90,7 +90,20 @@
     .btn.primary:hover { background: var(--blue-dark); }
     .btn.gold { background: var(--gold); color: white; }
     .btn.danger { background: #f5dddd; color: var(--red); border-color: #ecc3c3; }
-    .btn.ghost { background: transparent; border: 1px solid var(--line); }
+    .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+    .btn.ghost:hover { background: #efe8dc; border-color: var(--gold); color: var(--ink); }
+    aside .btn.ghost,
+    .side-bottom .btn.ghost {
+      color: #f5efe4;
+      border-color: rgba(245,239,228,.78);
+      background: rgba(255,255,255,.03);
+    }
+    aside .btn.ghost:hover,
+    .side-bottom .btn.ghost:hover {
+      color: #111111;
+      background: #f4d58d;
+      border-color: #f4d58d;
+    }
     .btn.full { width: 100%; margin-top: 20px; }
     .app { min-height: 100vh; display: grid; grid-template-columns: 276px 1fr; }
     aside {
@@ -795,4 +808,5 @@ where not exists (select 1 from public.hero_config);`;
   </script>
 </body>
 </html>
+
 
