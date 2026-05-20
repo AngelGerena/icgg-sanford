@@ -105,6 +105,18 @@
       border-color: #f4d58d;
     }
     .btn.full { width: 100%; margin-top: 20px; }
+    .login-return {
+      display: flex;
+      justify-content: center;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--blue-dark);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .login-return:hover { color: var(--gold); }
     .app { min-height: 100vh; display: grid; grid-template-columns: 276px 1fr; }
     aside {
       background: linear-gradient(180deg, var(--nav), #17130f);
@@ -231,6 +243,7 @@
       </div>
       <button class="btn primary full" id="login-btn">Sign In</button>
       <p class="muted" style="font-size:13px;margin-top:16px;">Access is managed through Supabase Authentication.</p>
+      <a class="login-return" href="/">Return to Website</a>
     </div>
   </section>
 
@@ -826,6 +839,9 @@ where not exists (select 1 from public.hero_config);`;
   </script>
 </body>
 </html>
+
+
+
 
 
 
