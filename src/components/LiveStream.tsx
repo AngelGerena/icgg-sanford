@@ -149,7 +149,7 @@ const LiveStream = () => {
         </div>
 
         {/* Live Stream Section Header */}
-        <div id="livestream" className="text-center mb-8 scroll-mt-24">
+        <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('live.title')}
           </h2>

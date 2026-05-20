@@ -1,159 +1,137 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, MapPin, Users, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { createClient } from '@supabase/supabase-js';
+import { getRows } from '../lib/supabase';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
-
-// Fallback static events if Supabase returns nothing
-const STATIC_EVENTS = [
-  {
-    id: 'static-1',
-    title_es: 'Oración Matutina',
-    title_en: 'Morning Prayer',
-    date: null,
-    time_start: '08:30',
-    time_end: null,
-    location: '2560 S. Elm Ave. Sanford, FL 32773',
-    description: 'Únete a nosotros cada miércoles para un tiempo de oración y comunión.',
-    type: 'weekly',
-    color: '#3b82f6',
-    flyer_url: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1',
-    date_label: 'Cada Miércoles'
-  },
-  {
-    id: 'static-2',
-    title_es: 'Estudio Bíblico',
-    title_en: 'Bible Study',
-    date: null,
-    time_start: '19:30',
-    time_end: '21:00',
-    location: '2560 S. Elm Ave. Sanford, FL 32773',
-    description: 'Profundiza en la Palabra de Dios con nuestra comunidad cada jueves.',
-    type: 'weekly',
-    color: '#f59e0b',
-    flyer_url: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1',
-    date_label: 'Cada Jueves'
-  },
-  {
-    id: 'static-3',
-    title_es: 'Servicio Dominical',
-    title_en: 'Sunday Service',
-    date: null,
-    time_start: '10:00',
-    time_end: '12:30',
-    location: '2560 S. Elm Ave. Sanford, FL 32773',
-    description: 'Celebra con nosotros cada domingo en un tiempo de adoración y la Palabra.',
-    type: 'celebration',
-    color: '#10b981',
-    flyer_url: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1',
-    date_label: 'Cada Domingo'
-  }
-];
-
-const TYPE_COLORS: Record<string, string> = {
-  weekly: 'bg-blue-500/90 text-white',
-  special: 'bg-amber-500/90 text-white',
-  celebration: 'bg-green-500/90 text-white',
-  youth: 'bg-purple-500/90 text-white',
-  kids: 'bg-pink-500/90 text-white',
-  conference: 'bg-red-500/90 text-white'
-};
-
-const TYPE_LABELS_ES: Record<string, string> = {
-  weekly: 'Semanal',
-  special: 'Especial',
-  celebration: 'Celebración',
-  youth: 'Jóvenes',
-  kids: 'Niños',
-  conference: 'Conferencia'
-};
-
-function formatTime(t: string | null) {
-  if (!t) return '';
-  const [h, m] = t.split(':');
-  const hr = parseInt(h);
-  const ampm = hr >= 12 ? 'PM' : 'AM';
-  return `${hr % 12 || 12}:${m} ${ampm}`;
-}
-
-function formatDate(dateStr: string | null, dateLabel?: string) {
-  if (dateLabel) return dateLabel;
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('es-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-}
-
-interface SupabaseEvent {
+type ChurchEvent = {
   id: string;
   title_es: string;
-  title_en: string | null;
-  date: string | null;
-  time_start: string | null;
-  time_end: string | null;
-  location: string;
-  description: string | null;
-  type: string;
-  color: string;
-  flyer_url: string | null;
-  is_weekly: boolean;
-  date_label?: string;
+  title_en?: string;
+  date?: string;
+  date_label_es?: string;
+  date_label_en?: string;
+  time_start?: string;
+  time_end?: string;
+  location?: string;
+  description?: string;
+  description_en?: string;
+  type?: string;
+  color?: string;
+  flyer_url?: string;
+  is_active?: boolean;
+};
+
+const fallbackEvents: ChurchEvent[] = [
+  {
+    id: 'prayer',
+    title_es: 'Oracion',
+    title_en: 'Prayer',
+    date_label_es: 'Todos los Miercoles',
+    date_label_en: 'Every Wednesday',
+    time_start: '08:30',
+    location: '2560 S. Elm Ave. Sanford, FL 32773',
+    description: 'Un tiempo dedicado a la oracion comunitaria, intercesion y busqueda de la presencia de Dios.',
+    description_en: 'A time dedicated to community prayer, intercession and seeking the presence of God.',
+    type: 'weekly',
+    color: '#2563eb',
+    flyer_url: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1',
+  },
+  {
+    id: 'bible-study',
+    title_es: 'Estudio Biblico',
+    title_en: 'Bible Study',
+    date_label_es: 'Todos los Jueves',
+    date_label_en: 'Every Thursday',
+    time_start: '19:30',
+    location: '2560 S. Elm Ave. Sanford, FL 32773',
+    description: 'Un tiempo de profundizacion en la Palabra de Dios.',
+    description_en: 'A time of deepening in the Word of God.',
+    type: 'weekly',
+    color: '#d97706',
+    flyer_url: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1',
+  },
+  {
+    id: 'sunday-service',
+    title_es: 'Servicio de Domingo',
+    title_en: 'Sunday Service',
+    date_label_es: 'Todos los Domingos',
+    date_label_en: 'Every Sunday',
+    time_start: '10:00',
+    location: '2560 S. Elm Ave. Sanford, FL 32773',
+    description: 'Nuestro servicio principal de adoracion dominical con predicacion, alabanza y comunion.',
+    description_en: 'Our main Sunday worship service with preaching, praise, and fellowship.',
+    type: 'celebration',
+    color: '#059669',
+    flyer_url: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1',
+  },
+];
+
+function formatTime(start?: string, end?: string) {
+  if (!start) return '';
+
+  const convert = (value: string) => {
+    const [hourText, minute = '00'] = value.split(':');
+    const hour = Number(hourText);
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minute} ${suffix}`;
+  };
+
+  return end ? `${convert(start)} - ${convert(end)}` : convert(start);
+}
+
+function formatDate(event: ChurchEvent, language: string) {
+  if (language === 'en' && event.date_label_en) return event.date_label_en;
+  if (event.date_label_es) return event.date_label_es;
+
+  if (!event.date) return language === 'en' ? 'Upcoming' : 'Proximamente';
+
+  const date = new Date(`${event.date}T00:00:00`);
+  return new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'es-US', {
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+}
+
+function eventAccent(type?: string, color?: string) {
+  if (color) return color;
+  if (type === 'celebration') return '#059669';
+  if (type === 'special') return '#d97706';
+  if (type === 'youth') return '#7c3aed';
+  return '#2563eb';
 }
 
 const Events = () => {
-  const { t } = useLanguage();
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: eventsRef, isVisible: eventsVisible } = useScrollAnimation();
-  const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
-
-  const [events, setEvents] = useState<SupabaseEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { t, isSpanish } = useLanguage();
+  const language = isSpanish ? 'es' : 'en';
+  const [events, setEvents] = useState<ChurchEvent[]>(fallbackEvents);
 
   useEffect(() => {
-    async function fetchEvents() {
+    let cancelled = false;
+
+    async function loadEvents() {
       try {
-        const now = new Date();
-        const today = now.toISOString().split('T')[0];
+        const rows = await getRows<ChurchEvent>('events', {
+          order: 'date.asc',
+          filters: { is_active: true },
+        });
 
-        const { data, error } = await supabase
-          .from('events')
-          .select('*')
-          .eq('is_active', true)
-          .or(`date.gte.${today},is_weekly.eq.true`)
-          .order('date', { ascending: true });
-
-        if (error || !data || data.length === 0) {
-          setEvents(STATIC_EVENTS as SupabaseEvent[]);
-        } else {
-          setEvents(data);
-        }
-      } catch {
-        setEvents(STATIC_EVENTS as SupabaseEvent[]);
-      } finally {
-        setLoading(false);
+        if (!cancelled && rows.length) setEvents(rows);
+      } catch (error) {
+        console.warn('Using fallback events:', error);
       }
     }
 
-    fetchEvents();
+    loadEvents();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
-    <section
-      id="calendario-eventos"
-      className="py-20 bg-white"
-      style={{ backgroundColor: '#ffffff', scrollMarginTop: '100px' }}
-    >
+    <section id="events" className="py-20 bg-white" style={{ backgroundColor: '#ffffff' }}>
       <div className="container mx-auto px-4">
-        <div
-          ref={headerRef}
-          className={`text-center mb-16 transition-all duration-1000 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('events.title')}
           </h2>
@@ -163,134 +141,92 @@ const Events = () => {
           </p>
         </div>
 
-        <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          {t('events.calendarTitle')}
-        </h3>
+        <div className="grid lg:grid-cols-3 gap-8 mb-16">
+          {events.map((event) => {
+            const accent = eventAccent(event.type, event.color);
+            const title = language === 'en' && event.title_en ? event.title_en : event.title_es;
+            const description = language === 'en' && event.description_en ? event.description_en : event.description;
 
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-          </div>
-        ) : (
-          <div ref={eventsRef} className="grid lg:grid-cols-2 gap-8 mb-16">
-            {events.map((event, index) => (
-              <div
+            return (
+              <article
                 key={event.id}
-                className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-700 overflow-hidden group hover:-translate-y-1 ${
-                  eventsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group hover:-translate-y-1"
               >
-                {/* Event Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <div
-                    className="absolute inset-0 opacity-20"
-                    style={{ background: `linear-gradient(135deg, ${event.color}, ${event.color}99)` }}
-                  ></div>
+                <div className="relative h-48 overflow-hidden bg-gray-100">
                   {event.flyer_url ? (
                     <img
                       src={event.flyer_url}
-                      alt={event.title_es}
+                      alt={title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <div className="h-12 w-12 bg-gray-400 rounded"></div>
+                    <div className="h-full w-full flex items-center justify-center text-gray-400">
+                      <Calendar className="h-14 w-14" />
                     </div>
                   )}
-
-                  {/* Date badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-black/60 text-white backdrop-blur-sm">
-                      {formatDate(event.date, event.date_label)}
-                    </span>
-                  </div>
-
-                  {/* Type badge */}
                   <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${TYPE_COLORS[event.type] || 'bg-purple-500/90 text-white'}`}>
-                      {TYPE_LABELS_ES[event.type] || event.type}
+                    <span
+                      className="px-3 py-1 rounded-full text-sm font-semibold text-white"
+                      style={{ backgroundColor: accent }}
+                    >
+                      {event.type || 'event'}
                     </span>
                   </div>
                 </div>
 
-                {/* Event Content */}
                 <div className="p-6">
-                  <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors">
-                      {event.title_es}
-                    </h3>
-                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors">
+                    {title}
+                  </h3>
 
                   <div className="space-y-3 mb-6">
-                    {event.date && (
-                      <div className="flex items-center space-x-3 text-gray-600">
-                        <div className="p-2 rounded-lg bg-blue-100">
-                          <Calendar className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <span className="font-medium">{formatDate(event.date)}</span>
-                      </div>
-                    )}
                     <div className="flex items-center space-x-3 text-gray-600">
-                      <div className="p-2 rounded-lg bg-amber-100">
-                        <Clock className="h-4 w-4 text-amber-600" />
+                      <div className="p-2 rounded-lg text-white" style={{ backgroundColor: accent }}>
+                        <Calendar className="h-4 w-4" />
                       </div>
-                      <span className="font-medium">
-                        {formatTime(event.time_start)}
-                        {event.time_end ? ` — ${formatTime(event.time_end)}` : ''}
-                      </span>
+                      <span className="font-medium">{formatDate(event, language)}</span>
+                    </div>
+                    <div className="flex items-center space-x-3 text-gray-600">
+                      <div className="p-2 rounded-lg text-white" style={{ backgroundColor: accent }}>
+                        <Clock className="h-4 w-4" />
+                      </div>
+                      <span className="font-medium">{formatTime(event.time_start, event.time_end)}</span>
                     </div>
                     <div className="flex items-start space-x-3 text-gray-600">
-                      <div className="p-2 rounded-lg bg-green-100">
-                        <MapPin className="h-4 w-4 text-green-600" />
+                      <div className="p-2 rounded-lg text-white" style={{ backgroundColor: accent }}>
+                        <MapPin className="h-4 w-4" />
                       </div>
                       <span className="font-medium text-sm leading-relaxed">{event.location}</span>
                     </div>
                   </div>
 
-                  {event.description && (
-                    <p className="text-gray-700 leading-relaxed mb-4">{event.description}</p>
-                  )}
+                  {description ? <p className="text-gray-700 leading-relaxed mb-4">{description}</p> : null}
 
-                  <div className="flex items-center">
-                    <div className="flex items-center space-x-2 text-gray-500">
-                      <Users className="h-4 w-4" />
-                      <span className="text-sm">{t('events.allWelcome')}</span>
-                    </div>
+                  <div className="flex items-center space-x-2 text-gray-500">
+                    <Users className="h-4 w-4" />
+                    <span className="text-sm">Todos bienvenidos</span>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              </article>
+            );
+          })}
+        </div>
 
-        {/* Call to Action */}
-        <div
-          ref={ctaRef}
-          className={`text-center transition-all duration-1000 ${
-            ctaVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
-        >
-          <div className="bg-gradient-to-r from-blue-700 to-blue-800 rounded-2xl shadow-xl p-8 text-white max-w-4xl mx-auto hover:shadow-2xl transition-shadow duration-300">
-            <h3 className="text-3xl font-bold mb-4">¿Quieres estar al día con nuestros eventos?</h3>
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-blue-700 to-blue-800 rounded-2xl shadow-xl p-8 text-white max-w-4xl mx-auto">
+            <h3 className="text-3xl font-bold mb-4">Quieres estar al dia con nuestros eventos?</h3>
             <p className="text-xl text-blue-100 mb-6">
-              Síguenos en Facebook y nunca te pierdas nuestras actividades especiales
+              Siguenos en Facebook y nunca te pierdas nuestras actividades especiales
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://www.facebook.com/irenegraciaygloria"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center space-x-2"
-              >
-                <span>Seguir en Facebook</span>
-                <ArrowRight className="h-5 w-5" />
-              </a>
-            </div>
+            <a
+              href="https://www.facebook.com/irenegraciaygloria"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg inline-flex items-center justify-center space-x-2"
+            >
+              <span>Seguir en Facebook</span>
+              <ArrowRight className="h-5 w-5" />
+            </a>
           </div>
         </div>
       </div>

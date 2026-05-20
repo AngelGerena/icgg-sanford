@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
 const Contact = () => {
   const { t } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
-
-  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
-  const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation();
-  const { ref: mapRef, isVisible: mapVisible } = useScrollAnimation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -41,10 +39,14 @@ const Contact = () => {
       
       // Fallback to direct Supabase function if the proxy doesn't exist
       if (!response.ok && response.status === 404) {
-        const supabaseResponse = await fetch('https://your-project.supabase.co/functions/v1/contact-form', {
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) throw new Error('Supabase is not configured');
+
+        const supabaseResponse = await fetch(`${SUPABASE_URL}/functions/v1/contact-form`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify(formData)
         });
@@ -186,12 +188,7 @@ ${formData.message}
   return (
     <section id="contact" className="py-20 bg-gray-50" style={{backgroundColor: '#f9fafb'}}>
       <div className="container mx-auto px-4">
-        <div
-          ref={headerRef}
-          className={`text-center mb-16 transition-all duration-1000 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
+        <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('contact.title')}
           </h2>
@@ -201,15 +198,13 @@ ${formData.message}
           </p>
         </div>
 
-        <div ref={contentRef} className="grid lg:grid-cols-2 gap-12">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div className={`transition-all duration-700 ${
-            contentVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-          }`}>
+          <div>
             <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('contact.info')}</h3>
-
+            
             <div className="space-y-6">
-              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="bg-blue-700 p-3 rounded-full">
                   <MapPin className="h-6 w-6 text-white" />
                 </div>
@@ -220,7 +215,7 @@ ${formData.message}
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="bg-amber-600 p-3 rounded-full">
                   <Mail className="h-6 w-6 text-white" />
                 </div>
@@ -230,7 +225,7 @@ ${formData.message}
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+              <div className="flex items-start space-x-4 p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <div className="bg-purple-600 p-3 rounded-full">
                   <Clock className="h-6 w-6 text-white" />
                 </div>
@@ -244,12 +239,10 @@ ${formData.message}
           </div>
 
           {/* Contact Form */}
-          <div className={`transition-all duration-700 delay-200 ${
-            contentVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-          }`}>
+          <div>
             <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('contact.sendMessage')}</h3>
-
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
+            
+            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8">
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -385,38 +378,25 @@ ${formData.message}
         </div>
 
         {/* Map Section */}
-        <div
-          ref={mapRef}
-          className={`mt-16 transition-all duration-1000 ${
-            mapVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
-        >
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="bg-gradient-to-br from-blue-700 to-blue-800 p-6">
-              <h3 className="text-3xl font-bold text-white text-center">{t('contact.directions')}</h3>
-            </div>
-            <div className="relative w-full h-96">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.8527436897564!2d-81.30037682404614!3d28.77090637560451!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e7696c7b9c5555%3A0x7890e1f2a3b4c5d6!2s2560%20S%20Elm%20Ave%2C%20Sanford%2C%20FL%2032773!5e0!3m2!1sen!2sus!4v1710000000000!5m2!1sen!2sus"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0"
-              ></iframe>
-            </div>
-            <div className="bg-gray-50 p-6 text-center">
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=2560+S.+Elm+Ave,+Sanford,+FL+32773"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <MapPin className="h-5 w-5" />
-                <span>{t('contact.clickMaps')}</span>
-              </a>
+        <div className="mt-16">
+          <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded-xl shadow-lg p-8 group">
+            <h3 className="text-3xl font-bold text-white mb-6 text-center">{t('contact.directions')}</h3>
+            <div 
+              className="bg-blue-600 rounded-lg h-64 flex items-center justify-center hover:bg-blue-500 transition-all duration-300 cursor-pointer transform hover:scale-105"
+              onClick={() => window.open('https://www.google.com/maps/dir/?api=1&destination=2560+S.+Elm+Ave,+Sanford,+FL+32773', '_blank')}
+            >
+              <div className="text-center px-4">
+                <MapPin className="h-12 w-12 text-white group-hover:text-orange-400 mx-auto mb-4 transition-colors duration-300" />
+                <p className="text-lg text-white group-hover:text-orange-400 font-medium transition-colors duration-300">
+                  2560 S. Elm Ave.
+                </p>
+                <p className="text-lg text-white group-hover:text-orange-400 font-medium transition-colors duration-300">
+                  Sanford, FL 32773
+                </p>
+                <p className="text-blue-200 group-hover:text-orange-200 mt-2 transition-colors duration-300">
+                  {t('contact.clickMaps')}
+                </p>
+              </div>
             </div>
           </div>
         </div>
