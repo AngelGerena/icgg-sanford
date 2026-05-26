@@ -8,16 +8,6 @@ interface ContactFormData {
   message: string;
 }
 
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  }[char] || char));
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -41,11 +31,6 @@ Deno.serve(async (req: Request) => {
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     const contactEmail = Deno.env.get('CONTACT_EMAIL') || 'icggmedia@gmail.com';
-    const safeName = escapeHtml(formData.name);
-    const safeEmail = escapeHtml(formData.email);
-    const safePhone = formData.phone ? escapeHtml(formData.phone) : '';
-    const safeSubject = escapeHtml(formData.subject);
-    const safeMessage = escapeHtml(formData.message);
 
     if (!resendApiKey || resendApiKey === 'your_resend_api_key_here') {
       console.log('Contact form submission (email not configured):', formData);
@@ -69,15 +54,15 @@ Deno.serve(async (req: Request) => {
 
         <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #374151; margin-top: 0;">Información de Contacto</h3>
-          <p><strong>Nombre:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
-          ${safePhone ? `<p><strong>Teléfono:</strong> ${safePhone}</p>` : ''}
-          <p><strong>Asunto:</strong> ${safeSubject}</p>
+          <p><strong>Nombre:</strong> ${formData.name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${formData.email}">${formData.email}</a></p>
+          ${formData.phone ? `<p><strong>Teléfono:</strong> ${formData.phone}</p>` : ''}
+          <p><strong>Asunto:</strong> ${formData.subject}</p>
         </div>
 
         <div style="background-color: #ffffff; padding: 20px; border-left: 4px solid #1e40af; margin: 20px 0;">
           <h3 style="color: #374151; margin-top: 0;">Mensaje</h3>
-          <p style="line-height: 1.6; white-space: pre-wrap;">${safeMessage}</p>
+          <p style="line-height: 1.6; white-space: pre-wrap;">${formData.message}</p>
         </div>
 
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">
@@ -96,7 +81,7 @@ Deno.serve(async (req: Request) => {
         from: 'ICGG Contact Form <onboarding@resend.dev>',
         to: [contactEmail],
         reply_to: formData.email,
-        subject: `Contacto desde ICGG.us: ${formData.subject.replace(/[\r\n]/g, ' ')}`,
+        subject: `Contacto desde ICGG.us: ${formData.subject}`,
         html: emailHtml,
       }),
     });

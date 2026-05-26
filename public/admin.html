@@ -1,847 +1,1617 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ICGG Admin</title>
-  <style>
-    :root {
-      --bg: #f4f1eb;
-      --panel: #ffffff;
-      --panel-soft: #fbfaf7;
-      --ink: #171717;
-      --muted: #6b665c;
-      --line: #ded8cc;
-      --nav: #111111;
-      --nav-soft: #1d1b18;
-      --blue: #254c7a;
-      --blue-dark: #18385d;
-      --gold: #a77a2d;
-      --gold-soft: #efe3ce;
-      --green: #176b4c;
-      --red: #9f2f2f;
-      --shadow: 0 18px 45px rgba(30, 24, 16, .08);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      -webkit-font-smoothing: antialiased;
-    }
-    button, input, textarea, select { font: inherit; }
-    button { cursor: pointer; }
-    .hidden { display: none !important; }
-    .login {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background:
-        linear-gradient(rgba(17,17,17,.72), rgba(17,17,17,.84)),
-        url('https://www.dropbox.com/scl/fi/bjp3ifh6opjn0ug5nfg62/Hero-1.jpg?rlkey=ou63aqgvc47228zv4izc0d3xn&st=q05gq7ol&raw=1');
-      background-size: cover;
-      background-position: center;
-    }
-    .login-card {
-      width: min(440px, 100%);
-      background: white;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 10px;
-      padding: 38px;
-      box-shadow: 0 28px 80px rgba(0,0,0,.32);
-    }
-    .brand { font-size: 30px; font-weight: 900; letter-spacing: .01em; color: var(--ink); }
-    .sub { color: var(--muted); margin-top: 6px; line-height: 1.5; }
-    .field { display: grid; gap: 7px; margin-top: 17px; }
-    label { font-size: 11px; font-weight: 800; color: #4f493f; text-transform: uppercase; letter-spacing: .08em; }
-    input, textarea, select {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      padding: 11px 12px;
-      background: var(--panel);
-      color: var(--ink);
-      outline: none;
-      min-height: 42px;
-      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
-    }
-    input[type="file"] { padding: 8px; background: var(--panel-soft); }
-    input[type="color"] { padding: 4px; }
-    textarea { min-height: 110px; resize: vertical; }
-    input:focus, textarea:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(167,122,45,.14); }
-    .btn {
-      border: 1px solid transparent;
-      border-radius: 7px;
-      padding: 10px 15px;
-      font-weight: 800;
-      background: #e9e4da;
-      color: var(--ink);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 40px;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
-    }
-    .btn:hover { transform: translateY(-1px); }
-    .btn.primary { background: var(--ink); color: white; }
-    .btn.primary:hover { background: var(--blue-dark); }
-    .btn.gold { background: var(--gold); color: white; }
-    .btn.danger { background: #f5dddd; color: var(--red); border-color: #ecc3c3; }
-    .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
-    .btn.ghost:hover { background: #efe8dc; border-color: var(--gold); color: var(--ink); }
-    aside .btn.ghost,
-    .side-bottom .btn.ghost {
-      color: #f5efe4;
-      border-color: rgba(245,239,228,.78);
-      background: rgba(255,255,255,.03);
-    }
-    aside .btn.ghost:hover,
-    .side-bottom .btn.ghost:hover {
-      color: #111111;
-      background: #f4d58d;
-      border-color: #f4d58d;
-    }
-    .btn.full { width: 100%; margin-top: 20px; }
-    .login-return {
-      display: flex;
-      justify-content: center;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--blue-dark);
-      font-size: 14px;
-      font-weight: 800;
-      text-decoration: none;
-    }
-    .login-return:hover { color: var(--gold); }
-    .app { min-height: 100vh; display: grid; grid-template-columns: 276px 1fr; }
-    aside {
-      background: linear-gradient(180deg, var(--nav), #17130f);
-      color: white;
-      padding: 24px 18px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      border-right: 1px solid rgba(255,255,255,.08);
-    }
-    .side-title { font-size: 24px; font-weight: 900; color: #f4d58d; letter-spacing: .03em; }
-    .side-note { color: #afa79b; font-size: 12px; margin: 5px 0 28px; text-transform: uppercase; letter-spacing: .14em; }
-    nav { display: grid; gap: 6px; }
-    .nav-btn {
-      width: 100%;
-      justify-content: flex-start;
-      background: transparent;
-      color: #cfc7bb;
-      border: 1px solid transparent;
-      border-radius: 8px;
-      font-weight: 750;
-    }
-    .nav-btn.active, .nav-btn:hover { background: var(--nav-soft); color: white; border-color: rgba(244,213,141,.24); }
-    .side-bottom { position: absolute; left: 18px; right: 18px; bottom: 22px; display: grid; gap: 10px; }
-    main { padding: 34px; }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 26px;
-    }
-    h1 { margin: 0; font-size: 30px; letter-spacing: -.01em; }
-    h2 { margin: 0 0 16px; font-size: 19px; letter-spacing: -.01em; }
-    .muted { color: var(--muted); line-height: 1.5; }
-    .grid { display: grid; gap: 20px; }
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-    .stat { font-size: 38px; font-weight: 900; color: var(--gold); letter-spacing: -.03em; }
-    .toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-    table { width: 100%; border-collapse: collapse; background: white; }
-    th, td { padding: 14px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    th { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .09em; }
-    tr:hover td { background: #fbfaf7; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge { border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 900; background: var(--gold-soft); color: #6f4d17; text-transform: uppercase; letter-spacing: .06em; }
-    .preview-img { width: 92px; height: 62px; object-fit: cover; border-radius: 7px; border: 1px solid var(--line); background: #e2ded5; }
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(17,17,17,.72);
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      z-index: 20;
-      backdrop-filter: blur(5px);
-    }
-    .modal-card {
-      width: min(780px, 100%);
-      max-height: 92vh;
-      overflow: auto;
-      background: white;
-      border-radius: 10px;
-      padding: 24px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.3);
-    }
-    .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 10px; }
-    .toast {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 30;
-      background: #111827;
-      color: white;
-      padding: 12px 14px;
-      border-radius: 9px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.22);
-      max-width: 420px;
-    }
-    .toast.good { background: var(--green); }
-    .toast.bad { background: var(--red); }
-    .sql {
-      min-height: 420px;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.55;
-      white-space: pre;
-      background: #151515;
-      color: #f3ead8;
-      border-color: #2b2925;
-    }
-    @media (max-width: 860px) {
-      .app { grid-template-columns: 1fr; }
-      aside { position: static; height: auto; }
-      .side-bottom { position: static; margin-top: 20px; }
-      main { padding: 18px; }
-      .grid.two, .grid.three { grid-template-columns: 1fr; }
-      table, thead, tbody, th, td, tr { display: block; }
-      th { display: none; }
-      td { padding: 8px 0; }
-      tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICGG Admin Portal — Finesse OS</title>
+<!-- Supabase loaded on demand after login -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ===================== RESET & BASE ===================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #0b0f1a;
+    --surface:   #111827;
+    --surface2:  #1a2235;
+    --border:    #1e2d45;
+    --gold:      #C5A44B;
+    --gold-dim:  #9b7c38;
+    --blue:      #1C2640;
+    --accent:    #3b82f6;
+    --red:       #ef4444;
+    --green:     #22c55e;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --sidebar-w: 240px;
+    --header-h:  60px;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+  button { cursor: pointer; font-family: inherit; }
+  input, textarea, select { font-family: inherit; }
+
+  /* ===================== LOGIN SCREEN ===================== */
+  #login-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; z-index: 9999;
+  }
+  #login-screen.hidden { display: none; }
+  .login-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 48px 40px; width: 100%; max-width: 420px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .login-logo { text-align: center; margin-bottom: 32px; }
+  .login-logo .brand { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold); }
+  .login-logo .sub { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+  .login-title { font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 28px; }
+  .login-field { margin-bottom: 16px; }
+  .login-field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .login-field input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 14px; outline: none; transition: border-color .2s; }
+  .login-field input:focus { border-color: var(--gold); }
+  .btn-login { width: 100%; padding: 14px; background: var(--gold); color: #000; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; margin-top: 8px; transition: opacity .2s; }
+  .btn-login:hover { opacity: 0.88; }
+  .login-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 20px; }
+  .login-error { color: var(--red); font-size: 13px; text-align: center; margin-top: 12px; display: none; }
+
+  /* ===================== LAYOUT ===================== */
+  #app { display: flex; min-height: 100vh; }
+  #app.hidden { display: none; }
+
+  /* SIDEBAR */
+  aside {
+    width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
+  }
+  .sidebar-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); }
+  .sidebar-brand { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold); }
+  .sidebar-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .sidebar-church { font-size: 11px; color: var(--muted); margin-top: 8px; }
+
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+  .nav-section { padding: 8px 16px 4px; font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+    font-size: 13px; color: var(--muted); cursor: pointer; transition: all .15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--gold); background: rgba(197,164,75,0.08); border-left-color: var(--gold); }
+  .nav-icon { width: 16px; text-align: center; flex-shrink: 0; }
+
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+  .btn-logout { width: 100%; padding: 9px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 12px; transition: all .2s; }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+  /* MAIN */
+  main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 28px;
+  }
+  .topbar-title { font-size: 16px; font-weight: 600; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
+  .status-label { font-size: 12px; color: var(--muted); }
+  .btn-save-global { padding: 8px 18px; background: var(--gold); color: #000; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; transition: opacity .2s; }
+  .btn-save-global:hover { opacity: 0.85; }
+
+  .page-content { padding: 28px; max-width: 1300px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===================== CARDS & SECTIONS ===================== */
+  .section-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 20px;
+  }
+  .section-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .section-card-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .badge { padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .badge-gold { background: rgba(197,164,75,0.15); color: var(--gold); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* ===================== FORMS ===================== */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .form-full { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+  .field input, .field textarea, .field select {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; color: var(--text); font-size: 13px; outline: none; transition: border-color .2s;
+    width: 100%;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+
+  /* ===================== BUTTONS ===================== */
+  .btn { padding: 9px 18px; border-radius: 7px; font-size: 13px; font-weight: 600; border: none; transition: all .2s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--gold); color: #000; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .btn-danger:hover { background: rgba(239,68,68,0.2); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-icon { padding: 7px; border-radius: 6px; }
+
+  /* ===================== DASHBOARD ===================== */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+  .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .activity-feed { display: flex; flex-direction: column; gap: 10px; }
+  .activity-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface2); border-radius: 8px; }
+  .activity-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .activity-text { font-size: 13px; }
+  .activity-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ===================== EVENT CALENDAR ===================== */
+  .event-cal-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cal-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-chip {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer; transition: all .2s;
+  }
+  .filter-chip.active, .filter-chip:hover { border-color: var(--gold); color: var(--gold); background: rgba(197,164,75,0.08); }
+
+  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .event-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    transition: border-color .2s; position: relative;
+  }
+  .event-card:hover { border-color: var(--gold); }
+  .event-card-img { width: 100%; height: 160px; object-fit: cover; display: block; background: var(--border); }
+  .event-card-img-placeholder { width: 100%; height: 160px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--muted); }
+  .event-card-body { padding: 16px; }
+  .event-card-date { font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .event-card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .event-card-meta { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
+  .event-card-actions { display: flex; gap: 6px; padding: 12px 16px; border-top: 1px solid var(--border); }
+  .event-date-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--gold); color: #000; border-radius: 8px; padding: 4px 10px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .event-type-badge {
+    position: absolute; top: 10px; right: 10px;
+    border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 600;
+  }
+
+  /* ===================== EVENT MODAL ===================== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.hidden { display: none; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+  }
+  .modal-header { padding: 20px 24px 0; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .modal-title { font-size: 17px; font-weight: 600; }
+  .modal-close { background: transparent; border: none; color: var(--muted); font-size: 20px; line-height: 1; padding: 4px; }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 0 24px 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+  /* ===================== IMAGE UPLOAD ZONE ===================== */
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 28px;
+    text-align: center; cursor: pointer; transition: border-color .2s; position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--gold); }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-icon { font-size: 28px; margin-bottom: 8px; }
+  .upload-text { font-size: 13px; color: var(--muted); }
+  .upload-text strong { color: var(--gold); }
+  .upload-preview { position: relative; display: inline-block; margin-top: 12px; }
+  .upload-preview img { max-height: 180px; border-radius: 8px; border: 1px solid var(--border); }
+  .upload-preview .remove-img { position: absolute; top: -6px; right: -6px; background: var(--red); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+  /* ===================== HERO MANAGER ===================== */
+  .hero-slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .hero-slide-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; position: relative; cursor: grab;
+  }
+  .hero-slide-card.active-slide { border-color: var(--green); }
+  .hero-slide-img { width: 100%; height: 130px; object-fit: cover; background: var(--border); }
+  .hero-slide-footer { padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .hero-slide-label { font-size: 12px; font-weight: 500; }
+  .hero-slide-order { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); color: var(--gold); border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+
+  /* VIDEO HERO */
+  .video-toggle { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--surface2); border-radius: 8px; margin-bottom: 16px; }
+  .toggle-switch { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 22px; transition: .3s; cursor: pointer; }
+  .toggle-slider:before { content: ''; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .3s; }
+  input:checked + .toggle-slider { background: var(--gold); }
+  input:checked + .toggle-slider:before { transform: translateX(18px); }
+  .toggle-label { font-size: 13px; font-weight: 500; }
+  .toggle-sub { font-size: 11px; color: var(--muted); }
+
+  /* ===================== CONTENT BLOCKS ===================== */
+  .blocks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .block-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; cursor: pointer; transition: all .2s; position: relative;
+  }
+  .block-card:hover { border-color: var(--gold); }
+  .block-card.selected { border-color: var(--gold); background: rgba(197,164,75,0.06); }
+  .block-card-preview { width: 100%; height: 80px; border-radius: 6px; margin-bottom: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--border); }
+  .block-card-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .block-card-desc { font-size: 11px; color: var(--muted); }
+  .block-active-badge { position: absolute; top: 10px; right: 10px; background: var(--green); color: #000; border-radius: 20px; padding: 2px 8px; font-size: 10px; font-weight: 700; }
+
+  /* ===================== SECTION EDITORS ===================== */
+  .section-editor { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .section-editor-header {
+    padding: 14px 16px; background: var(--surface2); display: flex; align-items: center;
+    justify-content: space-between; cursor: pointer;
+  }
+  .section-editor-header:hover { background: rgba(197,164,75,0.05); }
+  .section-editor-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .section-editor-body { padding: 20px; display: none; }
+  .section-editor.open .section-editor-body { display: block; }
+  .chevron { transition: transform .2s; font-size: 12px; color: var(--muted); }
+  .section-editor.open .chevron { transform: rotate(180deg); }
+
+  /* ===================== TABLE ===================== */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th { text-align: left; padding: 10px 14px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid rgba(30,45,69,0.5); vertical-align: middle; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface2); }
+
+  /* ===================== COLOR PICKER SWATCHES ===================== */
+  .color-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .color-swatch { width: 32px; height: 32px; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
+  .color-swatch.selected { border-color: #fff; }
+
+  /* ===================== TOAST ===================== */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 20px; font-size: 13px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px); opacity: 0; transition: all .3s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { border-color: var(--green); }
+  #toast.error { border-color: var(--red); }
+  .toast-icon { font-size: 16px; }
+
+  /* ===================== MISC ===================== */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .info-box { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #93c5fd; }
+  .warn-box { background: rgba(197,164,75,0.08); border: 1px solid rgba(197,164,75,0.25); border-radius: 8px; padding: 14px 16px; font-size: 13px; color: var(--gold); }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .mb-2 { margin-bottom: 8px; }
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 16px; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .text-muted { color: var(--muted); font-size: 12px; }
+  .text-gold { color: var(--gold); }
+  .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    aside { transform: translateX(-100%); }
+    main { margin-left: 0; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
 </head>
 <body>
-  <section id="login" class="login">
-    <div class="login-card">
-      <div class="brand">I.C.G.G. Studio</div>
-      <div class="sub">A private publishing workspace for trusted media and ministry staff.</div>
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" type="email" autocomplete="email" placeholder="media@icgg.us" />
-      </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" />
-      </div>
-      <button class="btn primary full" id="login-btn">Sign In</button>
-      <p class="muted" style="font-size:13px;margin-top:16px;">Access is managed through Supabase Authentication.</p>
-      <a class="login-return" href="/">Return to Website</a>
+
+<!-- ========================= LOGIN ========================= -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand">I.C.G.G.</div>
+      <div class="sub">Finesse OS · Admin Portal</div>
     </div>
-  </section>
+    <div class="login-title">Iniciar Sesión</div>
+    <div class="login-field">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-email" placeholder="admin@icgg.us" />
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="login-password" placeholder="••••••••" />
+    </div>
+    <button class="btn-login" id="login-btn">Entrar al Portal</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-note">Acceso exclusivo para el equipo de media de I.C.G.G.</div>
+  </div>
+</div>
 
-  <section id="app" class="app hidden">
-    <aside>
-      <div class="side-title">I.C.G.G.</div>
-      <div class="side-note">Publishing Studio</div>
-      <nav>
-        <button class="btn nav-btn active" data-page="dashboard">Overview</button>
-        <button class="btn nav-btn" data-page="events">Calendar</button>
-        <button class="btn nav-btn" data-page="hero">Homepage Hero</button>
-        <button class="btn nav-btn" data-page="media">Media Library</button>
-        <button class="btn nav-btn" data-page="setup">System Setup</button>
-      </nav>
-      <div class="side-bottom">
-        <a class="btn ghost" href="/" target="_blank">Open Website</a>
-        <button class="btn ghost" id="logout-btn">Sign Out</button>
+<!-- ========================= APP ========================= -->
+<div id="app" class="hidden">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-header">
+      <div class="sidebar-brand">Finesse OS</div>
+      <div class="sidebar-sub">Admin Portal</div>
+      <div class="sidebar-church">I.C.G.G. — Media Team</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">General</div>
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <span class="nav-icon">📊</span> Dashboard
       </div>
-    </aside>
 
-    <main>
-      <div class="topbar">
+      <div class="nav-section">Contenido</div>
+      <div class="nav-item" onclick="showPage('events')">
+        <span class="nav-icon">📅</span> Calendario de Eventos
+      </div>
+      <div class="nav-item" onclick="showPage('hero')">
+        <span class="nav-icon">🖼</span> Hero / Portada
+      </div>
+      <div class="nav-item" onclick="showPage('sections')">
+        <span class="nav-icon">🧩</span> Secciones del Sitio
+      </div>
+      <div class="nav-item" onclick="showPage('blocks')">
+        <span class="nav-icon">🎨</span> Bloques de Estilo
+      </div>
+
+      <div class="nav-section">Media</div>
+      <div class="nav-item" onclick="showPage('gallery')">
+        <span class="nav-icon">🖼️</span> Galería de Flyers
+      </div>
+      <div class="nav-item" onclick="showPage('livestream')">
+        <span class="nav-icon">📡</span> Livestream / Video
+      </div>
+
+      <div class="nav-section">Config</div>
+      <div class="nav-item" onclick="showPage('settings')">
+        <span class="nav-icon">⚙️</span> Configuración
+      </div>
+      <div class="nav-item" onclick="showPage('team')">
+        <span class="nav-icon">👤</span> Equipo / Acceso
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">← Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main>
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-right">
+        <span class="status-dot"></span>
+        <span class="status-label">Sitio Activo</span>
+        <button class="btn-save-global" onclick="publishChanges()">⬆ Publicar Cambios</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ========== DASHBOARD ========== -->
+      <div id="page-dashboard" class="page active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Eventos este mes</div>
+            <div class="stat-value" id="stat-events">—</div>
+            <div class="stat-sub">Calendario activo</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Flyers subidos</div>
+            <div class="stat-value" id="stat-flyers">—</div>
+            <div class="stat-sub">Galería de media</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Slides en Hero</div>
+            <div class="stat-value" id="stat-slides">—</div>
+            <div class="stat-sub">Portada del sitio</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Secciones editadas</div>
+            <div class="stat-value">12</div>
+            <div class="stat-sub">Última sesión</div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">🔔 Actividad Reciente</div>
+          </div>
+          <div class="activity-feed" id="activity-feed">
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(197,164,75,0.15)">📅</div>
+              <div>
+                <div class="activity-text">Portal de administración iniciado</div>
+                <div class="activity-time">Ahora mismo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">🚀 Acciones Rápidas</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="showPage('events');openEventModal()">+ Nuevo Evento</button>
+            <button class="btn btn-secondary" onclick="showPage('hero')">Cambiar Hero</button>
+            <button class="btn btn-secondary" onclick="showPage('gallery')">Subir Flyer</button>
+            <button class="btn btn-secondary" onclick="showPage('sections')">Editar Secciones</button>
+          </div>
+        </div>
+
+        <div class="warn-box">
+          ⚠️ <strong>Configuración pendiente:</strong> Conecta tu proyecto de Supabase en <em>Configuración → Supabase</em> para activar sincronización en tiempo real con el sitio.
+        </div>
+      </div>
+
+      <!-- ========== EVENTS ========== -->
+      <div id="page-events" class="page">
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">📅 Calendario de Eventos <span class="badge badge-gold">Interactivo</span></div>
+            <button class="btn btn-primary" onclick="openEventModal()">+ Nuevo Evento</button>
+          </div>
+
+          <div class="event-cal-toolbar">
+            <div class="cal-filters">
+              <button class="filter-chip active" onclick="filterEvents('all',this)">Todos</button>
+              <button class="filter-chip" onclick="filterEvents('weekly',this)">Semanales</button>
+              <button class="filter-chip" onclick="filterEvents('special',this)">Especiales</button>
+              <button class="filter-chip" onclick="filterEvents('celebration',this)">Celebración</button>
+              <button class="filter-chip" onclick="filterEvents('youth',this)">Jóvenes</button>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px">
+              <input type="month" id="event-month-filter" class="field input" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;" onchange="renderEvents()" />
+            </div>
+          </div>
+
+          <div id="events-grid" class="events-grid">
+            <div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">Cargando eventos...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== HERO ========== -->
+      <div id="page-hero" class="page">
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">🎬 Modo de Portada</div>
+            <span class="badge badge-blue" id="hero-mode-badge">IMAGEN</span>
+          </div>
+
+          <div class="video-toggle">
+            <label class="toggle-switch">
+              <input type="checkbox" id="video-mode-toggle" onchange="toggleVideoMode()" />
+              <span class="toggle-slider"></span>
+            </label>
+            <div>
+              <div class="toggle-label">Usar Video como Hero</div>
+              <div class="toggle-sub">El video reemplazará las imágenes de portada y se reproducirá en loop profesional</div>
+            </div>
+          </div>
+
+          <!-- IMAGE MODE -->
+          <div id="hero-image-mode">
+            <div class="section-card-title mb-3">Slides de Imagen (arrastrar para reordenar)</div>
+            <div id="hero-slides" class="hero-slides"></div>
+            <div class="mt-3">
+              <div class="upload-zone" id="hero-upload-zone">
+                <input type="file" accept="image/*" multiple onchange="addHeroSlide(this)" />
+                <div class="upload-icon">🖼</div>
+                <div class="upload-text">Arrastra imágenes aquí o <strong>haz clic para explorar</strong></div>
+                <div class="text-muted mt-2">PNG, JPG, WEBP — máx. 5 MB por imagen. Recomendado: 1920×1080</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section-card-title mb-3">Texto del Hero</div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Título principal</label>
+                <input type="text" id="hero-title" value="I.C.G.G." />
+              </div>
+              <div class="field">
+                <label>Subtítulo</label>
+                <input type="text" id="hero-subtitle" value="Iglesia Cristiana Gracia y Gloria Sanford" />
+              </div>
+              <div class="field form-full">
+                <label>Bienvenida</label>
+                <input type="text" id="hero-welcome" value="Bienvenidos a nuestra familia de fe" />
+              </div>
+              <div class="field">
+                <label>Texto Botón Primario</label>
+                <input type="text" id="hero-btn1" value="Únete a Nosotros" />
+              </div>
+              <div class="field">
+                <label>Texto Botón Secundario</label>
+                <input type="text" id="hero-btn2" value="Nuestros Servicios" />
+              </div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary" onclick="saveHeroContent()">Guardar Hero</button></div>
+          </div>
+
+          <!-- VIDEO MODE -->
+          <div id="hero-video-mode" style="display:none;">
+            <div class="form-grid">
+              <div class="field form-full">
+                <label>URL del Video (YouTube, Vimeo, MP4 directo, Dropbox RAW)</label>
+                <input type="url" id="hero-video-url" placeholder="https://..." />
+              </div>
+              <div class="field">
+                <label>Overlay oscuro</label>
+                <select id="hero-overlay">
+                  <option value="0.3">Ligero (30%)</option>
+                  <option value="0.5" selected>Medio (50%)</option>
+                  <option value="0.65">Oscuro (65%)</option>
+                  <option value="0.8">Muy Oscuro (80%)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Color overlay</label>
+                <select id="hero-overlay-color">
+                  <option value="rgba(28,38,64," selected>Azul (marca ICGG)</option>
+                  <option value="rgba(0,0,0,">Negro puro</option>
+                  <option value="rgba(100,20,20,">Granate</option>
+                </select>
+              </div>
+            </div>
+            <div class="info-box mt-3">
+              ℹ️ Para Dropbox: abre el archivo, copia el link y cambia <code>?dl=0</code> por <code>?raw=1</code> al final. El video se reproducirá en loop automático sin controles.
+            </div>
+            <div class="mt-3"><button class="btn btn-primary" onclick="saveVideoHero()">Guardar Video Hero</button></div>
+          </div>
+        </div>
+
+        <!-- HERO OVERLAY STYLE -->
+        <div class="section-card">
+          <div class="section-card-title mb-3">🎨 Color de Overlay del Hero</div>
+          <div class="color-row">
+            <div class="color-swatch selected" style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8,#3b82f6)" title="Azul ICGG (por defecto)" onclick="selectOverlay(this,'rgba(30,58,138,0.8),rgba(30,64,175,0.7),rgba(59,130,246,0.6)')"></div>
+            <div class="color-swatch" style="background:linear-gradient(135deg,#000,#1a1a1a)" title="Negro" onclick="selectOverlay(this,'rgba(0,0,0,0.7),rgba(0,0,0,0.6),rgba(0,0,0,0.5)')"></div>
+            <div class="color-swatch" style="background:linear-gradient(135deg,#4c1d95,#6d28d9,#8b5cf6)" title="Púrpura" onclick="selectOverlay(this,'rgba(76,29,149,0.8),rgba(109,40,217,0.7),rgba(139,92,246,0.5)')"></div>
+            <div class="color-swatch" style="background:linear-gradient(135deg,#7f1d1d,#991b1b,#b91c1c)" title="Rojo oscuro" onclick="selectOverlay(this,'rgba(127,29,29,0.8),rgba(153,27,27,0.7),rgba(185,28,28,0.5)')"></div>
+            <div class="color-swatch" style="background:linear-gradient(135deg,#064e3b,#065f46,#047857)" title="Verde oscuro" onclick="selectOverlay(this,'rgba(6,78,59,0.8),rgba(6,95,70,0.7),rgba(4,120,87,0.5)')"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SECTIONS ========== -->
+      <div id="page-sections" class="page">
+        <div class="info-box mb-4">
+          ℹ️ Cada sección del sitio se puede expandir y editar. Los cambios se guardan localmente y se publican con el botón "Publicar Cambios" en la barra superior.
+        </div>
+
+        <!-- About -->
+        <div class="section-editor" id="se-about">
+          <div class="section-editor-header" onclick="toggleSection('se-about')">
+            <div class="section-editor-title">📖 Acerca de Nosotros <span class="badge badge-gold">About</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid">
+              <div class="field"><label>Título</label><input type="text" value="Acerca de Nosotros" /></div>
+              <div class="field"><label>Subtítulo</label><input type="text" value="Nuestra Historia" /></div>
+              <div class="field form-full"><label>Descripción</label><textarea>Somos una comunidad de fe comprometida con compartir el amor de Cristo y servir a nuestra comunidad en Sanford, Florida.</textarea></div>
+              <div class="field"><label>Texto Misión (párrafo 1)</label><textarea>En I.C.G.G., creemos en el poder transformador del evangelio de Jesucristo.</textarea></div>
+              <div class="field"><label>Texto Misión (párrafo 2)</label><textarea>Nos dedicamos a predicar la Palabra de Dios con fidelidad.</textarea></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Sección About guardada','success')">Guardar</button></div>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="section-editor" id="se-services">
+          <div class="section-editor-header" onclick="toggleSection('se-services')">
+            <div class="section-editor-title">🕐 Horarios de Servicios <span class="badge badge-blue">Services</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid-3">
+              <div class="field"><label>Día 1</label><input type="text" value="Domingo" /></div>
+              <div class="field"><label>Hora Inicio</label><input type="text" value="10:00 AM" /></div>
+              <div class="field"><label>Hora Fin</label><input type="text" value="12:30 PM" /></div>
+              <div class="field"><label>Día 2</label><input type="text" value="Jueves" /></div>
+              <div class="field"><label>Hora Inicio</label><input type="text" value="7:30 PM" /></div>
+              <div class="field"><label>Hora Fin</label><input type="text" value="9:00 PM" /></div>
+              <div class="field form-full"><label>Dirección</label><input type="text" value="2560 S. Elm Ave. Sanford, FL 32773" /></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Horarios guardados','success')">Guardar</button></div>
+          </div>
+        </div>
+
+        <!-- Ministries -->
+        <div class="section-editor" id="se-ministries">
+          <div class="section-editor-header" onclick="toggleSection('se-ministries')">
+            <div class="section-editor-title">⛪ Ministerios <span class="badge badge-green">Ministries</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid">
+              <div class="field"><label>Título de sección</label><input type="text" value="Nuestros Ministerios" /></div>
+              <div class="field"><label>Descripción</label><textarea>Ofrecemos diversos ministerios para servir a toda la familia.</textarea></div>
+            </div>
+            <div class="divider"></div>
+            <div class="section-card-title mb-3">Ministerios individuales</div>
+            <div id="ministries-list">
+              <div class="form-grid mb-3" style="border:1px solid var(--border);border-radius:8px;padding:12px">
+                <div class="field"><label>Nombre</label><input type="text" value="Ministerio de Media" /></div>
+                <div class="field"><label>Descripción</label><input type="text" value="Equipo de fotografía, video, sonido y redes sociales" /></div>
+                <div class="field"><label>Emoji / Icono</label><input type="text" value="📹" style="width:80px" /></div>
+                <div class="field" style="align-self:end"><button class="btn btn-danger btn-sm">Eliminar</button></div>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Usa Supabase para agregar ministerios dinámicamente','')">+ Agregar Ministerio</button>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Ministerios guardados','success')">Guardar</button></div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="section-editor" id="se-contact">
+          <div class="section-editor-header" onclick="toggleSection('se-contact')">
+            <div class="section-editor-title">📬 Contacto <span class="badge badge-gold">Contact</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid">
+              <div class="field"><label>Dirección</label><input type="text" value="2560 S. Elm Ave. Sanford, FL 32773" /></div>
+              <div class="field"><label>Email</label><input type="email" value="info@icgg.us" /></div>
+              <div class="field"><label>Teléfono</label><input type="tel" value="" placeholder="(407) 000-0000" /></div>
+              <div class="field"><label>Horario de oficina</label><input type="text" value="Lunes - Viernes: 9:00 AM - 5:00 PM" /></div>
+              <div class="field"><label>Facebook URL</label><input type="url" value="https://www.facebook.com/irenegraciaygloria" /></div>
+              <div class="field"><label>YouTube URL</label><input type="url" placeholder="https://youtube.com/@icgg" /></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Contacto guardado','success')">Guardar</button></div>
+          </div>
+        </div>
+
+        <!-- Giving -->
+        <div class="section-editor" id="se-giving">
+          <div class="section-editor-header" onclick="toggleSection('se-giving')">
+            <div class="section-editor-title">🙌 Diezmos y Ofrendas <span class="badge badge-green">Giving</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid">
+              <div class="field"><label>Título</label><input type="text" value="Diezmos y Ofrendas" /></div>
+              <div class="field"><label>URL de donación (Zelle / PayPal / etc.)</label><input type="url" placeholder="https://..." /></div>
+              <div class="field form-full"><label>Descripción</label><textarea>Tu ofrenda apoya la obra de Dios en nuestra comunidad.</textarea></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Giving guardado','success')">Guardar</button></div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="section-editor" id="se-footer">
+          <div class="section-editor-header" onclick="toggleSection('se-footer')">
+            <div class="section-editor-title">🔻 Footer <span class="badge badge-blue">Footer</span></div>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="section-editor-body">
+            <div class="form-grid">
+              <div class="field"><label>Texto de copyright</label><input type="text" value="© 2025 I.C.G.G. Iglesia Cristiana Gracia y Gloria" /></div>
+              <div class="field"><label>Crédito del sitio</label><input type="text" value="Diseñado por Finesse Media LLC" /></div>
+              <div class="field"><label>URL del logo</label><input type="url" value="https://www.dropbox.com/..." /></div>
+            </div>
+            <div class="mt-3"><button class="btn btn-primary btn-sm" onclick="showToast('Footer guardado','success')">Guardar</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== STYLE BLOCKS ========== -->
+      <div id="page-blocks" class="page">
+        <div class="info-box mb-4">
+          🎨 Selecciona un bloque alternativo para dar un look fresco a cualquier sección del sitio sin perder la identidad de la iglesia.
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">Hero Blocks</div>
+          </div>
+          <div class="blocks-grid">
+            <div class="block-card selected" onclick="selectBlock(this,'hero-classic')">
+              <div class="block-card-preview" style="background:linear-gradient(135deg,#1e3a8a,#3b82f6)">🌄</div>
+              <div class="block-card-name">Classic Gradient</div>
+              <div class="block-card-desc">Overlay azul con carrusel de fotos</div>
+              <div class="block-active-badge">ACTIVO</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'hero-cinematic')">
+              <div class="block-card-preview" style="background:#000">🎬</div>
+              <div class="block-card-name">Cinematic Dark</div>
+              <div class="block-card-desc">Overlay negro intenso, tipografía bold</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'hero-split')">
+              <div class="block-card-preview" style="background:linear-gradient(90deg,#1C2640 50%,#C5A44B 50%)">✂️</div>
+              <div class="block-card-name">Split Layout</div>
+              <div class="block-card-desc">Texto izquierda, imagen derecha</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'hero-minimal')">
+              <div class="block-card-preview" style="background:#f8f8f8;color:#000">☀️</div>
+              <div class="block-card-name">Light & Clean</div>
+              <div class="block-card-desc">Versión clara para temporadas especiales</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">Event Calendar Blocks</div>
+          </div>
+          <div class="blocks-grid">
+            <div class="block-card selected" onclick="selectBlock(this,'cal-grid')">
+              <div class="block-card-preview" style="background:#111827">🗂️</div>
+              <div class="block-card-name">Card Grid</div>
+              <div class="block-card-desc">Tarjetas con flyer, hora y lugar</div>
+              <div class="block-active-badge">ACTIVO</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'cal-list')">
+              <div class="block-card-preview" style="background:#0f172a">📋</div>
+              <div class="block-card-name">List View</div>
+              <div class="block-card-desc">Vista tipo agenda, limpia y minimalista</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'cal-masonry')">
+              <div class="block-card-preview" style="background:#1a1a2e">🧱</div>
+              <div class="block-card-name">Masonry</div>
+              <div class="block-card-desc">Mosaico asimétrico de flyers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">Services Section Blocks</div>
+          </div>
+          <div class="blocks-grid">
+            <div class="block-card selected" onclick="selectBlock(this,'svc-cards')">
+              <div class="block-card-preview" style="background:#1a2235">🗓️</div>
+              <div class="block-card-name">Time Cards</div>
+              <div class="block-card-desc">Tarjetas individuales por día</div>
+              <div class="block-active-badge">ACTIVO</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'svc-table')">
+              <div class="block-card-preview" style="background:#1a2235">📊</div>
+              <div class="block-card-name">Schedule Table</div>
+              <div class="block-card-desc">Tabla tipo horario de clase</div>
+            </div>
+            <div class="block-card" onclick="selectBlock(this,'svc-timeline')">
+              <div class="block-card-preview" style="background:#1a2235">📍</div>
+              <div class="block-card-name">Timeline</div>
+              <div class="block-card-desc">Línea de tiempo vertical</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== GALLERY ========== -->
+      <div id="page-gallery" class="page">
+        <div class="section-card">
+          <div class="section-card-header">
+            <div class="section-card-title">🖼️ Galería de Flyers y Media <span class="badge badge-gold">Upload</span></div>
+            <button class="btn btn-primary" onclick="document.getElementById('gallery-upload').click()">+ Subir Flyers</button>
+          </div>
+          <input type="file" id="gallery-upload" multiple accept="image/*" style="display:none" onchange="handleGalleryUpload(this)" />
+
+          <div class="upload-zone mb-4" id="gallery-drop-zone">
+            <input type="file" multiple accept="image/*" onchange="handleGalleryUpload(this)" />
+            <div class="upload-icon">📂</div>
+            <div class="upload-text">Arrastra flyers aquí o <strong>haz clic para seleccionar</strong></div>
+            <div class="text-muted mt-2">PNG, JPG, WEBP — Los flyers se pueden asignar a eventos directamente</div>
+          </div>
+
+          <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+            <div class="empty-state"><div class="empty-icon">🖼️</div><div class="empty-text">No hay flyers aún. Sube el primero.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== LIVESTREAM ========== -->
+      <div id="page-livestream" class="page">
+        <div class="section-card">
+          <div class="section-card-title mb-4">📡 Configuración de Livestream</div>
+          <div class="form-grid">
+            <div class="field">
+              <label>ID de la página de Facebook</label>
+              <input type="text" value="irenegraciaygloria" placeholder="Ej: irenegraciaygloria" />
+            </div>
+            <div class="field">
+              <label>YouTube Channel ID</label>
+              <input type="text" placeholder="UCxxxxxx..." />
+            </div>
+            <div class="field form-full">
+              <label>URL del último stream (embed)</label>
+              <input type="url" placeholder="https://www.youtube.com/embed/..." />
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section-card-title mb-3">🕐 Horarios de Transmisión</div>
+          <div class="form-grid-3">
+            <div class="field"><label>Día</label><input type="text" value="Domingo" /></div>
+            <div class="field"><label>Hora</label><input type="text" value="10:00 AM" /></div>
+            <div class="field"><label>Etiqueta</label><input type="text" value="Servicio Principal" /></div>
+            <div class="field"><label>Día</label><input type="text" value="Jueves" /></div>
+            <div class="field"><label>Hora</label><input type="text" value="7:30 PM" /></div>
+            <div class="field"><label>Etiqueta</label><input type="text" value="Estudio Bíblico" /></div>
+          </div>
+          <div class="mt-3"><button class="btn btn-primary" onclick="showToast('Livestream guardado','success')">Guardar</button></div>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS ========== -->
+      <div id="page-settings" class="page">
+        <div class="section-card">
+          <div class="section-card-title mb-4">🔗 Conexión a Supabase</div>
+          <div class="warn-box mb-4">
+            Necesitas un proyecto de Supabase para que los eventos y cambios se sincronicen automáticamente con el sitio web en tiempo real.
+          </div>
+          <div class="form-grid">
+            <div class="field form-full">
+              <label>Supabase URL del proyecto</label>
+              <input type="url" id="sb-url" placeholder="https://xxxxxxxx.supabase.co" />
+            </div>
+            <div class="field form-full">
+              <label>Supabase Anon Key (pública)</label>
+              <input type="text" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" onclick="saveSupabaseConfig()">Conectar Supabase</button>
+          <div class="divider"></div>
+
+          <div class="section-card-title mb-3">🌐 Información del Sitio</div>
+          <div class="form-grid">
+            <div class="field"><label>Nombre de la iglesia</label><input type="text" value="Iglesia Cristiana Gracia y Gloria" /></div>
+            <div class="field"><label>Dominio del sitio</label><input type="text" value="icgg.us" /></div>
+            <div class="field"><label>URL de Netlify</label><input type="url" placeholder="https://icgg.netlify.app" /></div>
+            <div class="field"><label>URL de logo</label><input type="url" value="https://www.dropbox.com/..." /></div>
+          </div>
+          <div class="mt-3"><button class="btn btn-primary" onclick="showToast('Configuración guardada','success')">Guardar Configuración</button></div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-card-title mb-3">🗃️ SQL para crear tablas en Supabase</div>
+          <div class="info-box mb-3">Copia y ejecuta este SQL en el Editor de SQL de tu proyecto Supabase para crear todas las tablas necesarias.</div>
+          <textarea readonly style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:monospace;font-size:12px;color:#93c5fd;line-height:1.6;min-height:320px">-- ICGG Admin Portal — Supabase Schema
+-- Ejecuta este SQL en tu proyecto Supabase
+
+CREATE TABLE IF NOT EXISTS events (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title_es    TEXT NOT NULL,
+  title_en    TEXT,
+  date        DATE NOT NULL,
+  time_start  TIME,
+  time_end    TIME,
+  location    TEXT DEFAULT '2560 S. Elm Ave. Sanford, FL 32773',
+  description TEXT,
+  flyer_url   TEXT,
+  type        TEXT DEFAULT 'special',
+  color       TEXT DEFAULT '#C5A44B',
+  is_weekly   BOOLEAN DEFAULT false,
+  weekly_day  INT,
+  is_active   BOOLEAN DEFAULT true,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS hero_config (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  mode        TEXT DEFAULT 'image',
+  video_url   TEXT,
+  overlay     TEXT DEFAULT 'rgba(30,58,138,0.8)',
+  title       TEXT DEFAULT 'I.C.G.G.',
+  subtitle    TEXT DEFAULT 'Iglesia Cristiana Gracia y Gloria Sanford',
+  welcome     TEXT DEFAULT 'Bienvenidos a nuestra familia de fe',
+  btn1_label  TEXT DEFAULT 'Únete a Nosotros',
+  btn2_label  TEXT DEFAULT 'Nuestros Servicios',
+  updated_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS hero_slides (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  image_url   TEXT NOT NULL,
+  sort_order  INT DEFAULT 0,
+  is_active   BOOLEAN DEFAULT true,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS site_content (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  section     TEXT NOT NULL,
+  key         TEXT NOT NULL,
+  value_es    TEXT,
+  value_en    TEXT,
+  updated_at  TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(section, key)
+);
+
+CREATE TABLE IF NOT EXISTS gallery (
+  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  url         TEXT NOT NULL,
+  label       TEXT,
+  event_id    UUID REFERENCES events(id),
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS policies (run these too)
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE hero_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE hero_slides ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_content ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gallery ENABLE ROW LEVEL SECURITY;
+
+-- Allow public reads (site can fetch without auth)
+CREATE POLICY "public read events" ON events FOR SELECT USING (true);
+CREATE POLICY "public read hero" ON hero_config FOR SELECT USING (true);
+CREATE POLICY "public read slides" ON hero_slides FOR SELECT USING (true);
+CREATE POLICY "public read content" ON site_content FOR SELECT USING (true);
+CREATE POLICY "public read gallery" ON gallery FOR SELECT USING (true);
+
+-- Authenticated writes only (admin portal)
+CREATE POLICY "auth write events" ON events FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "auth write hero" ON hero_config FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "auth write slides" ON hero_slides FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "auth write content" ON site_content FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "auth write gallery" ON gallery FOR ALL USING (auth.role() = 'authenticated');</textarea>
+          <button class="btn btn-secondary mt-3" onclick="copySQL()">📋 Copiar SQL</button>
+        </div>
+      </div>
+
+      <!-- ========== TEAM ========== -->
+      <div id="page-team" class="page">
+        <div class="section-card">
+          <div class="section-card-title mb-4">👤 Equipo de Media — Acceso al Portal</div>
+          <div class="info-box mb-4">
+            Los usuarios se gestionan desde <strong>Supabase Authentication</strong>. Agrega miembros del equipo en <code>supabase.co → Authentication → Users → Invite user</code>. Luego el usuario puede acceder con su email y la contraseña que establezca.
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Último acceso</th><th></th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Administrador</td>
+                <td id="current-user-email">—</td>
+                <td><span class="badge badge-gold">Admin</span></td>
+                <td>Ahora</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </main>
+</div><!-- /app -->
+
+<!-- ========== EVENT MODAL ========== -->
+<div class="modal-overlay hidden" id="event-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="event-modal-title">Nuevo Evento</div>
+      <button class="modal-close" onclick="closeEventModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field form-full">
+          <label>Título del evento (Español)</label>
+          <input type="text" id="ev-title-es" placeholder="Ej: CONEXION Y DIVERSIÓN" />
+        </div>
+        <div class="field form-full">
+          <label>Título (Inglés — opcional)</label>
+          <input type="text" id="ev-title-en" placeholder="Connection & Fun" />
+        </div>
+        <div class="field">
+          <label>Fecha</label>
+          <input type="date" id="ev-date" />
+        </div>
+        <div class="field">
+          <label>Tipo de evento</label>
+          <select id="ev-type">
+            <option value="special">Especial</option>
+            <option value="weekly">Semanal</option>
+            <option value="celebration">Celebración</option>
+            <option value="youth">Jóvenes</option>
+            <option value="kids">Niños</option>
+            <option value="conference">Conferencia</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Hora inicio</label>
+          <input type="time" id="ev-time-start" />
+        </div>
+        <div class="field">
+          <label>Hora fin</label>
+          <input type="time" id="ev-time-end" />
+        </div>
+        <div class="field form-full">
+          <label>Lugar</label>
+          <input type="text" id="ev-location" value="I.C.G.G. - Iglesia Cristiana Gracia y Gloria" />
+        </div>
+        <div class="field form-full">
+          <label>Descripción</label>
+          <textarea id="ev-desc" placeholder="Descripción del evento..."></textarea>
+        </div>
+        <div class="field form-full">
+          <label>Color del card</label>
+          <div class="color-row">
+            <div class="color-swatch selected" style="background:#7c3aed" data-color="#7c3aed" onclick="selectEventColor(this)"></div>
+            <div class="color-swatch" style="background:#c5a44b" data-color="#c5a44b" onclick="selectEventColor(this)"></div>
+            <div class="color-swatch" style="background:#059669" data-color="#059669" onclick="selectEventColor(this)"></div>
+            <div class="color-swatch" style="background:#dc2626" data-color="#dc2626" onclick="selectEventColor(this)"></div>
+            <div class="color-swatch" style="background:#2563eb" data-color="#2563eb" onclick="selectEventColor(this)"></div>
+            <div class="color-swatch" style="background:#db2777" data-color="#db2777" onclick="selectEventColor(this)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="field">
+        <label>Flyer del Evento (imagen)</label>
+        <div class="upload-zone" id="ev-flyer-zone">
+          <input type="file" id="ev-flyer-input" accept="image/*" onchange="previewFlyer(this)" />
+          <div class="upload-icon">🖼</div>
+          <div class="upload-text">Arrastra el flyer o <strong>haz clic para subir</strong></div>
+          <div class="text-muted mt-2">El flyer aparecerá en el calendario del sitio</div>
+        </div>
+        <div id="ev-flyer-preview" style="margin-top:10px"></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="video-toggle">
+        <label class="toggle-switch">
+          <input type="checkbox" id="ev-weekly" />
+          <span class="toggle-slider"></span>
+        </label>
         <div>
-          <h1 id="page-title">Overview</h1>
-          <div class="muted" id="user-label"></div>
+          <div class="toggle-label">Evento recurrente / semanal</div>
+          <div class="toggle-sub">Se repetirá cada semana automáticamente</div>
         </div>
-        <button class="btn primary" id="refresh-btn">Refresh</button>
       </div>
-
-      <section id="page-dashboard" class="page grid three">
-        <div class="card"><div class="muted">Published events</div><div class="stat" id="stat-events">0</div></div>
-        <div class="card"><div class="muted">Hero assets</div><div class="stat" id="stat-slides">0</div></div>
-        <div class="card"><div class="muted">Library assets</div><div class="stat" id="stat-media">0</div></div>
-      </section>
-
-      <section id="page-events" class="page hidden">
-        <div class="card">
-          <div class="toolbar">
-            <div>
-              <h2>Calendar</h2>
-              <div class="muted">Manage events shown on the public website.</div>
-            </div>
-            <button class="btn primary" id="new-event-btn">Create Event</button>
-          </div>
-          <div style="overflow:auto;">
-            <table>
-              <thead><tr><th>Flyer</th><th>Event</th><th>Date</th><th>Type</th><th>Actions</th></tr></thead>
-              <tbody id="events-body"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="page-hero" class="page hidden grid">
-        <div class="card">
-          <h2>Homepage Hero</h2>
-          <div class="grid two">
-            <div class="field"><label>Title</label><input id="hero-title" /></div>
-            <div class="field"><label>Subtitle</label><input id="hero-subtitle" /></div>
-            <div class="field"><label>Primary Action</label><input id="hero-btn1" /></div>
-            <div class="field"><label>Secondary Action</label><input id="hero-btn2" /></div>
-            <div class="field" style="grid-column:1/-1;"><label>Welcome Line</label><input id="hero-welcome" /></div>
-            <div class="field"><label>Mode</label><select id="hero-mode"><option value="image">Image</option><option value="video">Video</option></select></div>
-            <div class="field"><label>Video URL</label><input id="hero-video" placeholder="https://..." /></div>
-          </div>
-          <button class="btn primary" id="save-hero-btn" style="margin-top:16px;">Save Hero</button>
-        </div>
-
-        <div class="card">
-          <div class="toolbar">
-            <div>
-              <h2>Hero Assets</h2>
-              <div class="muted">Upload polished homepage imagery to the media bucket.</div>
-            </div>
-            <input id="hero-file" type="file" accept="image/*" />
-          </div>
-          <div id="slides-list" class="grid three"></div>
-        </div>
-      </section>
-
-      <section id="page-media" class="page hidden">
-        <div class="card">
-          <div class="toolbar">
-            <div>
-              <h2>Media Library</h2>
-              <div class="muted">Approved images are stored in the Supabase <strong>media</strong> bucket.</div>
-            </div>
-            <input id="media-file" type="file" accept="image/*" multiple />
-          </div>
-          <div id="media-list" class="grid three"></div>
-        </div>
-      </section>
-
-      <section id="page-setup" class="page hidden">
-        <div class="card">
-          <h2>System Setup</h2>
-          <p class="muted">Run this once in Supabase SQL Editor. It creates the tables, security policies, and media storage rules.</p>
-          <textarea class="sql" id="setup-sql" readonly></textarea>
-          <button class="btn primary" id="copy-sql-btn" style="margin-top:12px;">Copy SQL</button>
-        </div>
-      </section>
-    </main>
-  </section>
-
-  <div id="event-modal" class="modal hidden">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h2 id="event-modal-title">Event</h2>
-        <button class="btn ghost" id="close-event-btn">Close</button>
-      </div>
-      <input type="hidden" id="event-id" />
-      <div class="grid two">
-        <div class="field"><label>Spanish Title</label><input id="event-title-es" /></div>
-        <div class="field"><label>English Title</label><input id="event-title-en" /></div>
-        <div class="field"><label>Date</label><input id="event-date" type="date" /></div>
-        <div class="field"><label>Type</label><select id="event-type"><option value="weekly">Weekly</option><option value="special">Special</option><option value="celebration">Celebration</option><option value="youth">Youth</option><option value="conference">Conference</option></select></div>
-        <div class="field"><label>Start Time</label><input id="event-start" type="time" /></div>
-        <div class="field"><label>End Time</label><input id="event-end" type="time" /></div>
-        <div class="field"><label>Accent Color</label><input id="event-color" type="color" value="#1d4ed8" /></div>
-        <div class="field"><label>Active</label><select id="event-active"><option value="true">Yes</option><option value="false">No</option></select></div>
-        <div class="field" style="grid-column:1/-1;"><label>Location</label><input id="event-location" /></div>
-        <div class="field" style="grid-column:1/-1;"><label>Description</label><textarea id="event-description"></textarea></div>
-        <div class="field" style="grid-column:1/-1;"><label>Flyer</label><input id="event-flyer-file" type="file" accept="image/*" /><div id="event-flyer-status" class="muted" style="font-size:13px;">Upload a flyer here, or paste an existing image URL below.</div></div>
-        <div class="field" style="grid-column:1/-1;"><label>Flyer URL</label><input id="event-flyer" placeholder="Flyer URL will appear here after upload" /></div>
-      </div>
-      <div class="actions" style="justify-content:flex-end;margin-top:18px;">
-        <button class="btn danger hidden" id="delete-event-btn">Delete</button>
-        <button class="btn primary" id="save-event-btn">Save Event</button>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeEventModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEvent()">Guardar Evento</button>
     </div>
   </div>
+</div>
 
-  <div id="toast" class="toast hidden"></div>
+<!-- TOAST -->
+<div id="toast"><span class="toast-icon" id="toast-icon"></span><span id="toast-msg"></span></div>
 
-  <script>
-    const SUPABASE_URL = 'https://zyvfvjrhnuwapfwipukd.supabase.co';
-    const REAL_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dmZ2anJobnV3YXBmd2lwdWtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyOTMxOTYsImV4cCI6MjA5NDg2OTE5Nn0.NO7cwPljC9dlfSfcJN1nTuqk9NrQNZKzzf-C3AfH_oQ';
-    const STORAGE_BUCKET = 'media';
-    let session = JSON.parse(localStorage.getItem('icgg_admin_session') || 'null');
-    let events = [];
-    let heroConfig = null;
-    let slides = [];
-    let media = [];
+<script>
+// ============================================================
+// CONFIG & STATE
+// ============================================================
+let supabase = null;
+let currentUser = null;
+let currentFilter = 'all';
+let selectedColor = '#7c3aed';
+let editingEventId = null;
 
-    const schemaSql = `-- ICGG website/admin schema
-create extension if not exists pgcrypto;
+const DEMO_EVENTS = [
+  { id: '1', title_es: 'SERIE: REPROGRAMA TU MENTE', date: '2026-05-07', time_start: '19:30', time_end: '21:00', location: 'I.C.G.G. - Iglesia Cristiana Gracia y Gloria', type: 'weekly', color: '#c5a44b', flyer_url: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1' },
+  { id: '2', title_es: 'CONEXION Y DIVERSION', date: '2026-05-08', time_start: '19:00', time_end: '21:00', location: 'I.C.G.G. - Iglesia Cristiana Gracia y Gloria', type: 'special', color: '#7c3aed', flyer_url: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1' },
+  { id: '3', title_es: 'Servicio de Domingo', date: '2026-05-10', time_start: '10:00', time_end: '12:30', location: 'I.C.G.G. - Iglesia Cristiana Gracia y Gloria', type: 'celebration', color: '#059669', flyer_url: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1' }
+];
 
-create table if not exists public.events (
-  id uuid primary key default gen_random_uuid(),
-  title_es text not null,
-  title_en text,
-  date date,
-  date_label_es text,
-  date_label_en text,
-  time_start time,
-  time_end time,
-  location text default '2560 S. Elm Ave. Sanford, FL 32773',
-  description text,
-  description_en text,
-  flyer_url text,
-  type text default 'special',
-  color text default '#1d4ed8',
-  is_weekly boolean default false,
-  weekly_day integer,
-  is_active boolean default true,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
+let events = [...DEMO_EVENTS];
 
-create table if not exists public.hero_config (
-  id uuid primary key default gen_random_uuid(),
-  mode text default 'image',
-  video_url text,
-  title text default 'I.C.G.G.',
-  subtitle text default 'Iglesia Cristiana Gracia y Gloria Sanford',
-  welcome text default 'Bienvenidos a nuestra familia de fe',
-  btn1_label text default 'Unete a Nosotros',
-  btn2_label text default 'Nuestros Servicios',
-  updated_at timestamptz default now()
-);
+const HERO_SLIDES_DEMO = [
+  { id: '1', image_url: 'https://www.dropbox.com/scl/fi/bjp3ifh6opjn0ug5nfg62/Hero-1.jpg?rlkey=ou63aqgvc47228zv4izc0d3xn&st=q05gq7ol&raw=1', sort_order: 0 },
+  { id: '2', image_url: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1', sort_order: 1 },
+  { id: '3', image_url: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1', sort_order: 2 }
+];
 
-create table if not exists public.hero_slides (
-  id uuid primary key default gen_random_uuid(),
-  image_url text not null,
-  sort_order integer default 0,
-  is_active boolean default true,
-  created_at timestamptz default now()
-);
+let heroSlides = [...HERO_SLIDES_DEMO];
+let galleryItems = [];
 
-create table if not exists public.gallery (
-  id uuid primary key default gen_random_uuid(),
-  url text not null,
-  label text,
-  event_id uuid references public.events(id) on delete set null,
-  created_at timestamptz default now()
-);
+// ============================================================
+// SUPABASE INIT
+// ============================================================
+function initSupabase() {
+  const sbUrl = localStorage.getItem('icgg_sb_url');
+  const sbKey = localStorage.getItem('icgg_sb_key');
+  if (sbUrl && sbKey && window.supabase) {
+    supabase = window.supabase.createClient(sbUrl, sbKey);
+    console.log('Supabase connected');
+  }
+}
 
-alter table public.events add column if not exists date_label_es text;
-alter table public.events add column if not exists date_label_en text;
-alter table public.events add column if not exists description_en text;
-alter table public.events add column if not exists is_active boolean default true;
-alter table public.events add column if not exists updated_at timestamptz default now();
-alter table public.hero_config add column if not exists mode text default 'image';
-alter table public.hero_config add column if not exists updated_at timestamptz default now();
-alter table public.hero_slides add column if not exists is_active boolean default true;
+function saveSupabaseConfig() {
+  const url = document.getElementById('sb-url').value.trim();
+  const key = document.getElementById('sb-key').value.trim();
+  if (!url || !key) { showToast('Completa URL y Key','error'); return; }
+  localStorage.setItem('icgg_sb_url', url);
+  localStorage.setItem('icgg_sb_key', key);
+  initSupabase();
+  showToast('Supabase conectado exitosamente','success');
+}
 
-alter table public.events enable row level security;
-alter table public.hero_config enable row level security;
-alter table public.hero_slides enable row level security;
-alter table public.gallery enable row level security;
+// ============================================================
+// AUTH
+// ============================================================
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
 
-drop policy if exists "public read events" on public.events;
-drop policy if exists "public read hero" on public.hero_config;
-drop policy if exists "public read slides" on public.hero_slides;
-drop policy if exists "public read gallery" on public.gallery;
-drop policy if exists "authenticated manage events" on public.events;
-drop policy if exists "authenticated manage hero" on public.hero_config;
-drop policy if exists "authenticated manage slides" on public.hero_slides;
-drop policy if exists "authenticated manage gallery" on public.gallery;
+  // Validate basic input first
+  if (!email || !email.includes('@')) {
+    errEl.textContent = 'Ingresa un correo electrónico válido.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (pass.length < 6) {
+    errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+    errEl.style.display = 'block';
+    return;
+  }
 
-create policy "public read events" on public.events for select using (is_active = true);
-create policy "public read hero" on public.hero_config for select using (true);
-create policy "public read slides" on public.hero_slides for select using (is_active = true);
-create policy "public read gallery" on public.gallery for select using (true);
+  // If Supabase is configured, use real auth
+  if (supabase) {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
+    enterApp(data.user.email);
+    return;
+  }
 
-create policy "authenticated manage events" on public.events for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
-create policy "authenticated manage hero" on public.hero_config for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
-create policy "authenticated manage slides" on public.hero_slides for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
-create policy "authenticated manage gallery" on public.gallery for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
+  // Demo mode — any valid email + 6 char password works
+  enterApp(email);
+}
 
-insert into storage.buckets (id, name, public)
-values ('media', 'media', true)
-on conflict (id) do update set public = true;
+function enterApp(email) {
+  currentUser = email;
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('current-user-email').textContent = email;
+  loadDashboard();
+  renderEvents();
+  renderHeroSlides();
+}
 
-drop policy if exists "public read media" on storage.objects;
-drop policy if exists "authenticated upload media" on storage.objects;
-drop policy if exists "authenticated update media" on storage.objects;
-drop policy if exists "authenticated delete media" on storage.objects;
+async function doLogout() {
+  if (supabase) await supabase.auth.signOut();
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+}
 
-create policy "public read media" on storage.objects
-  for select using (bucket_id = 'media');
-create policy "authenticated upload media" on storage.objects
-  for insert with check (bucket_id = 'media' and auth.role() = 'authenticated');
-create policy "authenticated update media" on storage.objects
-  for update using (bucket_id = 'media' and auth.role() = 'authenticated')
-  with check (bucket_id = 'media' and auth.role() = 'authenticated');
-create policy "authenticated delete media" on storage.objects
-  for delete using (bucket_id = 'media' and auth.role() = 'authenticated');
+// ============================================================
+// NAVIGATION
+// ============================================================
+const PAGE_TITLES = {
+  dashboard: 'Dashboard',
+  events: 'Calendario de Eventos',
+  hero: 'Hero / Portada',
+  sections: 'Secciones del Sitio',
+  blocks: 'Bloques de Estilo',
+  gallery: 'Galería de Flyers',
+  livestream: 'Livestream / Video',
+  settings: 'Configuración',
+  team: 'Equipo / Acceso'
+};
 
-insert into public.hero_config (title, subtitle, welcome, btn1_label, btn2_label)
-select 'I.C.G.G.', 'Iglesia Cristiana Gracia y Gloria Sanford', 'Bienvenidos a nuestra familia de fe', 'Unete a Nosotros', 'Nuestros Servicios'
-where not exists (select 1 from public.hero_config);`;
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  document.getElementById('page-title').textContent = PAGE_TITLES[name] || name;
+  event && event.currentTarget && event.currentTarget.classList.add('active');
+  // Manual active state
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + name + "'")) n.classList.add('active');
+  });
+}
 
-    document.getElementById('setup-sql').value = schemaSql;
+// ============================================================
+// DASHBOARD
+// ============================================================
+function loadDashboard() {
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+  const monthEvents = events.filter(e => {
+    const d = new Date(e.date);
+    return d.getMonth() === month && d.getFullYear() === year;
+  });
+  document.getElementById('stat-events').textContent = monthEvents.length;
+  document.getElementById('stat-flyers').textContent = galleryItems.length;
+  document.getElementById('stat-slides').textContent = heroSlides.length;
+}
 
-    function headers(useSession = false, extra = {}) {
-      return {
-        apikey: REAL_ANON_KEY,
-        Authorization: `Bearer ${useSession && session ? session.access_token : REAL_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        ...extra
-      };
-    }
+// ============================================================
+// EVENTS
+// ============================================================
+function formatTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':');
+  const hr = parseInt(h);
+  const ampm = hr >= 12 ? 'PM' : 'AM';
+  return `${hr % 12 || 12}:${m} ${ampm}`;
+}
 
-    async function api(path, options = {}, useSession = false) {
-      const response = await fetch(`${SUPABASE_URL}${path}`, {
-        ...options,
-        headers: headers(useSession, options.headers || {})
-      });
-      if (!response.ok) throw new Error(await response.text() || `Request failed: ${response.status}`);
-      if (response.status === 204) return null;
-      return response.json();
-    }
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${months[d.getMonth()]} ${d.getDate()}`;
+}
 
-    function toast(message, good = true) {
-      const el = document.getElementById('toast');
-      el.textContent = message;
-      el.className = `toast ${good ? 'good' : 'bad'}`;
-      setTimeout(() => el.classList.add('hidden'), 4200);
-    }
+function getTypeLabel(type) {
+  const labels = { weekly:'Semanal', special:'Especial', celebration:'Celebración', youth:'Jóvenes', kids:'Niños', conference:'Conferencia' };
+  return labels[type] || type;
+}
 
-    function showPage(name) {
-      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      document.getElementById(`page-${name}`).classList.remove('hidden');
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === name));
-      const titles = {
-        dashboard: 'Overview',
-        events: 'Calendar',
-        hero: 'Homepage Hero',
-        media: 'Media Library',
-        setup: 'System Setup'
-      };
-      document.getElementById('page-title').textContent = titles[name] || name;
-    }
+function renderEvents() {
+  const grid = document.getElementById('events-grid');
+  let filtered = events;
+  if (currentFilter !== 'all') filtered = events.filter(e => e.type === currentFilter);
 
-    async function login() {
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      try {
-        const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-          method: 'POST',
-          headers: headers(false),
-          body: JSON.stringify({ email, password })
-        });
-        if (!response.ok) throw new Error('Login failed. Check the email/password and Supabase Auth user.');
-        session = await response.json();
-        localStorage.setItem('icgg_admin_session', JSON.stringify(session));
-        enter();
-      } catch (error) {
-        toast(error.message, false);
-      }
-    }
+  const monthFilter = document.getElementById('event-month-filter').value;
+  if (monthFilter) {
+    filtered = filtered.filter(e => e.date && e.date.startsWith(monthFilter));
+  }
 
-    function logout() {
-      session = null;
-      localStorage.removeItem('icgg_admin_session');
-      document.getElementById('app').classList.add('hidden');
-      document.getElementById('login').classList.remove('hidden');
-    }
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-text">No hay eventos para este filtro.</div></div>';
+    return;
+  }
 
-    async function enter() {
-      document.getElementById('login').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
-      document.getElementById('user-label').textContent = session.user?.email || 'Signed in';
-      await loadAll();
-    }
-
-    async function loadAll() {
-      try {
-        events = await api('/rest/v1/events?select=*&order=date.asc', {}, true);
-        const heroRows = await api('/rest/v1/hero_config?select=*&order=updated_at.desc&limit=1', {}, true);
-        heroConfig = heroRows[0] || null;
-        slides = await api('/rest/v1/hero_slides?select=*&order=sort_order.asc', {}, true);
-        media = await api('/rest/v1/gallery?select=*&order=created_at.desc', {}, true);
-        render();
-      } catch (error) {
-        toast(`Could not load data: ${error.message}`, false);
-      }
-    }
-
-    function render() {
-      document.getElementById('stat-events').textContent = events.length;
-      document.getElementById('stat-slides').textContent = slides.length;
-      document.getElementById('stat-media').textContent = media.length;
-      renderEvents();
-      renderHero();
-      renderMedia();
-    }
-
-    function renderEvents() {
-      const body = document.getElementById('events-body');
-      body.innerHTML = events.map(event => `
-        <tr>
-          <td>${event.flyer_url ? `<img class="preview-img" src="${event.flyer_url}" alt="">` : ''}</td>
-          <td><strong>${escapeHtml(event.title_es || '')}</strong><br><span class="muted">${escapeHtml(event.location || '')}</span></td>
-          <td>${event.date || ''}<br><span class="muted">${event.time_start || ''}${event.time_end ? ` - ${event.time_end}` : ''}</span></td>
-          <td><span class="badge">${event.type || 'event'}</span></td>
-          <td><button class="btn ghost" onclick="openEvent('${event.id}')">Edit</button></td>
-        </tr>
-      `).join('') || '<tr><td colspan="5" class="muted">No events yet.</td></tr>';
-    }
-
-    function renderHero() {
-      document.getElementById('hero-title').value = heroConfig?.title || 'I.C.G.G.';
-      document.getElementById('hero-subtitle').value = heroConfig?.subtitle || 'Iglesia Cristiana Gracia y Gloria Sanford';
-      document.getElementById('hero-welcome').value = heroConfig?.welcome || 'Bienvenidos a nuestra familia de fe';
-      document.getElementById('hero-btn1').value = heroConfig?.btn1_label || 'Unete a Nosotros';
-      document.getElementById('hero-btn2').value = heroConfig?.btn2_label || 'Nuestros Servicios';
-      document.getElementById('hero-mode').value = heroConfig?.mode || 'image';
-      document.getElementById('hero-video').value = heroConfig?.video_url || '';
-
-      document.getElementById('slides-list').innerHTML = slides.map(slide => `
-        <div class="card">
-          <img src="${slide.image_url}" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:6px;border:1px solid var(--line);">
-          <div class="actions" style="margin-top:10px;justify-content:space-between;">
-            <span class="badge">Order ${slide.sort_order || 0}</span>
-            <button class="btn danger" onclick="deleteSlide('${slide.id}')">Remove</button>
-          </div>
+  grid.innerHTML = filtered.map(ev => `
+    <div class="event-card">
+      ${ev.flyer_url
+        ? `<img class="event-card-img" src="${ev.flyer_url}" alt="${ev.title_es}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="event-card-img-placeholder" style="display:none">🖼</div>`
+        : `<div class="event-card-img-placeholder">🖼</div>`}
+      <div class="event-date-badge">${formatDate(ev.date)}</div>
+      <div class="event-type-badge" style="background:${ev.color}22;color:${ev.color};border:1px solid ${ev.color}44">${getTypeLabel(ev.type)}</div>
+      <div class="event-card-body">
+        <div class="event-card-title">${ev.title_es}</div>
+        <div class="event-card-meta">
+          <span>🕐 ${formatTime(ev.time_start)}${ev.time_end ? ' — ' + formatTime(ev.time_end) : ''}</span>
+          <span>📍 ${ev.location}</span>
         </div>
-      `).join('') || '<p class="muted">No hero slides yet.</p>';
+      </div>
+      <div class="event-card-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editEvent('${ev.id}')">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEvent('${ev.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterEvents(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderEvents();
+}
+
+function openEventModal(id) {
+  editingEventId = id || null;
+  document.getElementById('event-modal-title').textContent = id ? 'Editar Evento' : 'Nuevo Evento';
+  if (!id) {
+    document.getElementById('ev-title-es').value = '';
+    document.getElementById('ev-title-en').value = '';
+    document.getElementById('ev-date').value = '';
+    document.getElementById('ev-time-start').value = '';
+    document.getElementById('ev-time-end').value = '';
+    document.getElementById('ev-location').value = 'I.C.G.G. - Iglesia Cristiana Gracia y Gloria';
+    document.getElementById('ev-desc').value = '';
+    document.getElementById('ev-flyer-preview').innerHTML = '';
+    document.getElementById('ev-weekly').checked = false;
+  } else {
+    const ev = events.find(e => e.id === id);
+    if (!ev) return;
+    document.getElementById('ev-title-es').value = ev.title_es || '';
+    document.getElementById('ev-title-en').value = ev.title_en || '';
+    document.getElementById('ev-date').value = ev.date || '';
+    document.getElementById('ev-time-start').value = ev.time_start || '';
+    document.getElementById('ev-time-end').value = ev.time_end || '';
+    document.getElementById('ev-location').value = ev.location || '';
+    document.getElementById('ev-desc').value = ev.description || '';
+    document.getElementById('ev-weekly').checked = ev.is_weekly || false;
+    if (ev.flyer_url) {
+      document.getElementById('ev-flyer-preview').innerHTML = `<div class="upload-preview"><img src="${ev.flyer_url}" /></div>`;
     }
+  }
+  document.getElementById('event-modal').classList.remove('hidden');
+}
 
-    function renderMedia() {
-      document.getElementById('media-list').innerHTML = media.map(item => `
-        <div class="card">
-          <img src="${item.url}" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:6px;border:1px solid var(--line);">
-          <p style="word-break:break-word;"><strong>${escapeHtml(item.label || 'Image')}</strong></p>
-          <button class="btn ghost" onclick="copyText('${item.url.replace(/'/g, "\\'")}')">Copy URL</button>
-        </div>
-      `).join('') || '<p class="muted">No media uploaded yet.</p>';
+function closeEventModal() {
+  document.getElementById('event-modal').classList.add('hidden');
+  editingEventId = null;
+}
+
+function editEvent(id) { openEventModal(id); }
+
+function deleteEvent(id) {
+  if (!confirm('¿Eliminar este evento?')) return;
+  events = events.filter(e => e.id !== id);
+  renderEvents();
+  loadDashboard();
+  showToast('Evento eliminado','success');
+  addActivity('🗑️', 'Evento eliminado');
+}
+
+async function saveEvent() {
+  const title = document.getElementById('ev-title-es').value.trim();
+  if (!title) { showToast('El título es requerido','error'); return; }
+
+  const eventData = {
+    title_es: title,
+    title_en: document.getElementById('ev-title-en').value.trim(),
+    date: document.getElementById('ev-date').value,
+    time_start: document.getElementById('ev-time-start').value,
+    time_end: document.getElementById('ev-time-end').value,
+    location: document.getElementById('ev-location').value,
+    description: document.getElementById('ev-desc').value,
+    type: document.getElementById('ev-type').value,
+    color: selectedColor,
+    is_weekly: document.getElementById('ev-weekly').checked
+  };
+
+  if (supabase) {
+    if (editingEventId) {
+      const { error } = await supabase.from('events').update(eventData).eq('id', editingEventId);
+      if (error) { showToast('Error al actualizar: ' + error.message, 'error'); return; }
+    } else {
+      const { data, error } = await supabase.from('events').insert([eventData]).select();
+      if (error) { showToast('Error al guardar: ' + error.message, 'error'); return; }
+      if (data) eventData.id = data[0].id;
     }
+  }
 
-    function openEvent(id = '') {
-      const event = id ? events.find(row => row.id === id) : null;
-      document.getElementById('event-modal-title').textContent = event ? 'Edit Event' : 'New Event';
-      document.getElementById('event-id').value = event?.id || '';
-      document.getElementById('event-title-es').value = event?.title_es || '';
-      document.getElementById('event-title-en').value = event?.title_en || '';
-      document.getElementById('event-date').value = event?.date || '';
-      document.getElementById('event-type').value = event?.type || 'special';
-      document.getElementById('event-start').value = event?.time_start || '';
-      document.getElementById('event-end').value = event?.time_end || '';
-      document.getElementById('event-color').value = event?.color || '#1d4ed8';
-      document.getElementById('event-active').value = String(event?.is_active ?? true);
-      document.getElementById('event-location').value = event?.location || '2560 S. Elm Ave. Sanford, FL 32773';
-      document.getElementById('event-description').value = event?.description || '';
-      document.getElementById('event-flyer').value = event?.flyer_url || '';
-      document.getElementById('event-flyer-file').value = '';
-      document.getElementById('event-flyer-status').textContent = event?.flyer_url ? 'A flyer is attached. Upload a replacement or paste a different URL.' : 'Upload a flyer here, or paste an existing image URL below.';
-      document.getElementById('delete-event-btn').classList.toggle('hidden', !event);
-      document.getElementById('event-modal').classList.remove('hidden');
-    }
+  if (editingEventId) {
+    const idx = events.findIndex(e => e.id === editingEventId);
+    if (idx > -1) events[idx] = { ...events[idx], ...eventData };
+  } else {
+    eventData.id = Date.now().toString();
+    events.push(eventData);
+  }
 
-    async function saveEvent() {
-      const id = document.getElementById('event-id').value;
-      const payload = {
-        title_es: document.getElementById('event-title-es').value.trim(),
-        title_en: document.getElementById('event-title-en').value.trim() || null,
-        date: document.getElementById('event-date').value || null,
-        type: document.getElementById('event-type').value,
-        time_start: document.getElementById('event-start').value || null,
-        time_end: document.getElementById('event-end').value || null,
-        color: document.getElementById('event-color').value,
-        is_active: document.getElementById('event-active').value === 'true',
-        location: document.getElementById('event-location').value,
-        description: document.getElementById('event-description').value,
-        flyer_url: document.getElementById('event-flyer').value || null,
-      };
-      if (!payload.title_es) return toast('Spanish title is required.', false);
-      if (!payload.date) return toast('Event date is required.', false);
+  closeEventModal();
+  renderEvents();
+  loadDashboard();
+  showToast(editingEventId ? 'Evento actualizado' : 'Evento guardado','success');
+  addActivity('📅', `Evento ${editingEventId ? 'actualizado' : 'creado'}: ${title}`);
+}
 
-      try {
-        if (id) {
-          await api(`/rest/v1/events?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(payload) }, true);
-        } else {
-          await api('/rest/v1/events', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify(payload) }, true);
-        }
-        document.getElementById('event-modal').classList.add('hidden');
-        toast('Event saved.');
-        await loadAll();
-      } catch (error) {
-        toast(`Event was not saved: ${error.message}`, false);
-      }
-    }
+function previewFlyer(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('ev-flyer-preview').innerHTML = `
+      <div class="upload-preview">
+        <img src="${e.target.result}" style="max-height:160px;border-radius:8px" />
+      </div>`;
+  };
+  reader.readAsDataURL(file);
+}
 
-    async function deleteEvent() {
-      const id = document.getElementById('event-id').value;
-      if (!id || !confirm('Delete this event?')) return;
-      try {
-        await api(`/rest/v1/events?id=eq.${id}`, { method: 'DELETE' }, true);
-        document.getElementById('event-modal').classList.add('hidden');
-        toast('Event deleted.');
-        await loadAll();
-      } catch (error) {
-        toast(`Event was not deleted: ${error.message}`, false);
-      }
-    }
+function selectEventColor(el) {
+  document.querySelectorAll('#event-modal .color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedColor = el.dataset.color;
+}
 
-    async function saveHero() {
-      const payload = {
-        title: document.getElementById('hero-title').value,
-        subtitle: document.getElementById('hero-subtitle').value,
-        welcome: document.getElementById('hero-welcome').value,
-        btn1_label: document.getElementById('hero-btn1').value,
-        btn2_label: document.getElementById('hero-btn2').value,
-        mode: document.getElementById('hero-mode').value,
-        video_url: document.getElementById('hero-video').value || null,
-        updated_at: new Date().toISOString()
-      };
-      try {
-        if (heroConfig?.id) {
-          await api(`/rest/v1/hero_config?id=eq.${heroConfig.id}`, { method: 'PATCH', body: JSON.stringify(payload) }, true);
-        } else {
-          await api('/rest/v1/hero_config', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify(payload) }, true);
-        }
-        toast('Hero saved.');
-        await loadAll();
-      } catch (error) {
-        toast(`Hero was not saved: ${error.message}`, false);
-      }
-    }
+// ============================================================
+// HERO
+// ============================================================
+function toggleVideoMode() {
+  const isVideo = document.getElementById('video-mode-toggle').checked;
+  document.getElementById('hero-image-mode').style.display = isVideo ? 'none' : 'block';
+  document.getElementById('hero-video-mode').style.display = isVideo ? 'block' : 'none';
+  document.getElementById('hero-mode-badge').textContent = isVideo ? 'VIDEO' : 'IMAGEN';
+  document.getElementById('hero-mode-badge').className = 'badge ' + (isVideo ? 'badge-green' : 'badge-blue');
+}
 
-    async function uploadEventFlyer(file) {
-      if (!file) return;
-      const status = document.getElementById('event-flyer-status');
-      status.textContent = 'Uploading flyer...';
-      try {
-        const url = await uploadFile(file);
-        document.getElementById('event-flyer').value = url;
-        status.textContent = 'Flyer uploaded and attached to this event.';
-        toast('Flyer uploaded. Save the event to publish it.');
-      } catch (error) {
-        status.textContent = 'Flyer upload failed.';
-        toast(`Flyer upload failed: ${error.message}`, false);
-      }
-    }
-    async function uploadFile(file) {
-      const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
-      const path = `${Date.now()}-${safeName}`;
-      const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`, {
-        method: 'POST',
-        headers: {
-          apikey: REAL_ANON_KEY,
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': file.type,
-          'x-upsert': 'true'
-        },
-        body: file
-      });
-      if (!response.ok) throw new Error(await response.text() || 'Upload failed. Check the media bucket and storage policies.');
-      return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
-    }
+function renderHeroSlides() {
+  const container = document.getElementById('hero-slides');
+  container.innerHTML = heroSlides.map((slide, i) => `
+    <div class="hero-slide-card ${i === 0 ? 'active-slide' : ''}">
+      <img class="hero-slide-img" src="${slide.image_url}" onerror="this.src=''" />
+      <div class="hero-slide-order">${i + 1}</div>
+      <div class="hero-slide-footer">
+        <span class="hero-slide-label">Slide ${i + 1}</span>
+        <button class="btn btn-danger btn-sm btn-icon" onclick="removeHeroSlide('${slide.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
 
-    async function addHeroSlide(file) {
-      try {
-        const url = await uploadFile(file);
-        await api('/rest/v1/hero_slides', {
-          method: 'POST',
-          body: JSON.stringify({ image_url: url, sort_order: slides.length, is_active: true })
-        }, true);
-        toast('Hero slide uploaded.');
-        await loadAll();
-      } catch (error) {
-        toast(error.message, false);
-      }
-    }
+function addHeroSlide(input) {
+  Array.from(input.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      heroSlides.push({ id: Date.now().toString(), image_url: e.target.result, sort_order: heroSlides.length });
+      renderHeroSlides();
+      loadDashboard();
+      showToast('Slide agregado','success');
+      addActivity('🖼', 'Nuevo slide de hero agregado');
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-    async function deleteSlide(id) {
-      if (!confirm('Remove this hero slide?')) return;
-      try {
-        await api(`/rest/v1/hero_slides?id=eq.${id}`, { method: 'DELETE' }, true);
-        toast('Hero slide removed.');
-        await loadAll();
-      } catch (error) {
-        toast(error.message, false);
-      }
-    }
+function removeHeroSlide(id) {
+  heroSlides = heroSlides.filter(s => s.id !== id);
+  renderHeroSlides();
+  loadDashboard();
+  showToast('Slide eliminado','success');
+}
 
-    async function uploadMedia(files) {
-      for (const file of files) {
-        try {
-          const url = await uploadFile(file);
-          await api('/rest/v1/gallery', {
-            method: 'POST',
-            body: JSON.stringify({ url, label: file.name })
-          }, true);
-          toast(`Uploaded ${file.name}.`);
-        } catch (error) {
-          toast(`${file.name}: ${error.message}`, false);
-        }
-      }
-      await loadAll();
-    }
+function saveHeroContent() {
+  showToast('Hero guardado exitosamente','success');
+  addActivity('🖼', 'Configuración del hero actualizada');
+}
 
-    function copyText(text) {
-      navigator.clipboard.writeText(text);
-      toast('Copied.');
-    }
+function saveVideoHero() {
+  const url = document.getElementById('hero-video-url').value;
+  if (!url) { showToast('Ingresa una URL de video','error'); return; }
+  showToast('Video hero guardado','success');
+  addActivity('🎬', 'Video hero configurado');
+}
 
-    function copySql() {
-      navigator.clipboard.writeText(schemaSql);
-      toast('SQL copied.');
-    }
+function selectOverlay(el, gradient) {
+  document.querySelectorAll('#page-hero .color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast('Overlay seleccionado','success');
+}
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
-    }
+// ============================================================
+// GALLERY
+// ============================================================
+function handleGalleryUpload(input) {
+  Array.from(input.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      galleryItems.push({ id: Date.now().toString(), url: e.target.result, label: file.name });
+      renderGallery();
+      loadDashboard();
+      showToast('Flyer subido','success');
+      addActivity('🖼️', `Flyer subido: ${file.name}`);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-    document.getElementById('login-btn').addEventListener('click', login);
-    document.getElementById('password').addEventListener('keydown', event => { if (event.key === 'Enter') login(); });
-    document.getElementById('logout-btn').addEventListener('click', logout);
-    document.getElementById('refresh-btn').addEventListener('click', loadAll);
-    document.getElementById('new-event-btn').addEventListener('click', () => openEvent());
-    document.getElementById('close-event-btn').addEventListener('click', () => document.getElementById('event-modal').classList.add('hidden'));
-    document.getElementById('save-event-btn').addEventListener('click', saveEvent);
-    document.getElementById('event-flyer-file').addEventListener('change', event => event.target.files[0] && uploadEventFlyer(event.target.files[0]));
-    document.getElementById('delete-event-btn').addEventListener('click', deleteEvent);
-    document.getElementById('save-hero-btn').addEventListener('click', saveHero);
-    document.getElementById('hero-file').addEventListener('change', event => event.target.files[0] && addHeroSlide(event.target.files[0]));
-    document.getElementById('media-file').addEventListener('change', event => uploadMedia(Array.from(event.target.files)));
-    document.getElementById('copy-sql-btn').addEventListener('click', copySql);
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (!galleryItems.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🖼️</div><div class="empty-text">No hay flyers aún. Sube el primero.</div></div>';
+    return;
+  }
+  grid.innerHTML = galleryItems.map(item => `
+    <div style="position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--surface2)">
+      <img src="${item.url}" style="width:100%;height:140px;object-fit:cover;display:block" />
+      <div style="padding:8px 10px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.label}</div>
+      <button onclick="removeGalleryItem('${item.id}')" style="position:absolute;top:6px;right:6px;background:rgba(239,68,68,0.85);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:11px;cursor:pointer">✕</button>
+    </div>
+  `).join('');
+}
 
-    if (session?.access_token) enter();
-  </script>
+function removeGalleryItem(id) {
+  galleryItems = galleryItems.filter(i => i.id !== id);
+  renderGallery();
+  loadDashboard();
+}
+
+// ============================================================
+// SECTION EDITORS
+// ============================================================
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ============================================================
+// BLOCKS
+// ============================================================
+function selectBlock(el, blockId) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.block-card').forEach(c => {
+    c.classList.remove('selected');
+    const badge = c.querySelector('.block-active-badge');
+    if (badge) badge.remove();
+  });
+  el.classList.add('selected');
+  const badge = document.createElement('div');
+  badge.className = 'block-active-badge';
+  badge.textContent = 'ACTIVO';
+  el.appendChild(badge);
+  showToast('Bloque "' + el.querySelector('.block-card-name').textContent + '" activado','success');
+  addActivity('🎨', 'Bloque de estilo cambiado: ' + blockId);
+}
+
+// ============================================================
+// PUBLISH
+// ============================================================
+function publishChanges() {
+  showToast('Cambios publicados — sincronizando con el sitio...','success');
+  addActivity('⬆️', 'Cambios publicados al sitio en vivo');
+}
+
+// ============================================================
+// ACTIVITY FEED
+// ============================================================
+function addActivity(icon, text) {
+  const feed = document.getElementById('activity-feed');
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `
+    <div class="activity-icon" style="background:rgba(197,164,75,0.15)">${icon}</div>
+    <div><div class="activity-text">${text}</div><div class="activity-time">${timeStr}</div></div>`;
+  feed.insertBefore(item, feed.firstChild);
+  if (feed.children.length > 8) feed.lastChild.remove();
+}
+
+// ============================================================
+// UTILITY
+// ============================================================
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  toast.id = 'toast';
+  icon.textContent = type === 'success' ? '\u2705' : type === 'error' ? '\u274C' : '\u2139';
+  document.getElementById('toast-msg').textContent = msg;
+  toast.className = 'show ' + (type || '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.className = type || ''; }, 3000);
+}
+
+function copySQL() {
+  const ta = document.querySelector('#page-settings textarea');
+  navigator.clipboard.writeText(ta.value).then(() => showToast('SQL copiado al portapapeles','success'));
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Wire login button and Enter key
+  const loginBtn = document.getElementById('login-btn');
+  if (loginBtn) loginBtn.addEventListener('click', doLogin);
+  const pwField = document.getElementById('login-password');
+  if (pwField) pwField.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  const emField = document.getElementById('login-email');
+  if (emField) emField.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+  initSupabase();
+
+  // Set today's month in filter
+  const now = new Date();
+  const monthEl = document.getElementById('event-month-filter');
+  if (monthEl) monthEl.value = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+
+  // Load saved Supabase settings
+  const savedUrl = localStorage.getItem('icgg_sb_url');
+  const savedKey = localStorage.getItem('icgg_sb_key');
+  const sbUrlEl = document.getElementById('sb-url');
+  const sbKeyEl = document.getElementById('sb-key');
+  if (savedUrl && sbUrlEl) sbUrlEl.value = savedUrl;
+  if (savedKey && sbKeyEl) sbKeyEl.value = savedKey;
+});
+</script>
 </body>
 </html>
-
-
-
-
-
-

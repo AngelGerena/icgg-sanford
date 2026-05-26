@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Baby, Music, HandHeart, GraduationCap, Home, Heart, Crown, UserCheck, Flower, Smartphone, Globe, MessageSquare, ChevronDown, ChevronRight, X, Send, Church } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Ministries = () => {
   const { t } = useLanguage();
@@ -16,6 +17,10 @@ const Ministries = () => {
     email: '',
     message: ''
   });
+
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation();
+  const { ref: pastorRef, isVisible: pastorVisible } = useScrollAnimation();
 
   const toggleMinistry = (index: number) => {
     setOpenMinistries(prev => 
@@ -160,7 +165,12 @@ const Ministries = () => {
   return (
     <section id="ministries" className="py-20 bg-gray-50" style={{backgroundColor: '#f9fafb'}}>
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div
+          ref={headerRef}
+          className={`text-center mb-16 transition-all duration-1000 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('ministries.title')}
           </h2>
@@ -171,7 +181,12 @@ const Ministries = () => {
         </div>
 
         {/* Side-by-Side Accordion Layout */}
-        <div className="max-w-7xl mx-auto mb-16">
+        <div
+          ref={cardsRef}
+          className={`max-w-7xl mx-auto mb-16 transition-all duration-1000 ${
+            cardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           {/* Expand All / Collapse All Buttons */}
           <div className="flex justify-center space-x-4 mb-6">
             <button
@@ -291,8 +306,13 @@ const Ministries = () => {
         </div>
 
         {/* Pastor Section */}
-        <div>
-          <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+        <div
+          ref={pastorRef}
+          className={`transition-all duration-1000 ${
+            pastorVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          }`}
+        >
+          <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto transform transition-all duration-500 hover:shadow-2xl">
             <h3 className="text-3xl font-bold text-gray-900 mb-6 text-left">{t('ministries.pastor')}</h3>
             <div className="grid md:grid-cols-3 gap-8 items-center">
               <div className="md:col-span-1">
