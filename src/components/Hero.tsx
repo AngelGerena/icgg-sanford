@@ -4,8 +4,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const STATIC_SLIDES = [
   {
-    desktop: '/hero-worship-flag.jpg',
-    mobile: '/hero-worship-flag.jpg'
+    desktop: '/1.jpg',
+    mobile: '/1.jpg'
   },
   {
     desktop: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1',
@@ -16,12 +16,12 @@ const STATIC_SLIDES = [
     mobile: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1'
   },
   {
-    desktop: '/hero-pentecostes.jpg',
-    mobile: '/hero-pentecostes.jpg'
+    desktop: '/2.jpg',
+    mobile: '/2.jpg'
   },
   {
-    desktop: '/hero-congregation.jpg',
-    mobile: '/hero-congregation.jpg'
+    desktop: '/3.jpg',
+    mobile: '/3.jpg'
   }
 ];
 
