@@ -39,7 +39,7 @@ const ClasePastorales = () => {
             <div className="flex flex-col items-center">
               <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl mb-6 border-4 border-amber-600">
                 <img
-                  src="https://www.dropbox.com/scl/fi/xfsxaoe6m89k0odjld8yr/26DD5DE0-9F60-4FBC-8BD1-2897A675760E.JPEG?rlkey=1413t54ayowyip4xkfi8oxg6u&st=vhj277w2&raw=1"
+                  src="/pastora-irene.jpg"
                   alt="Pastora - Profile"
                   className="w-full h-full object-cover"
                 />
