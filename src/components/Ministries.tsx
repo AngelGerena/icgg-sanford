@@ -317,7 +317,7 @@ const Ministries = () => {
             <div className="grid md:grid-cols-3 gap-8 items-center">
               <div className="md:col-span-1">
                 <img
-                  src="https://www.dropbox.com/scl/fi/xfsxaoe6m89k0odjld8yr/26DD5DE0-9F60-4FBC-8BD1-2897A675760E.JPEG?rlkey=1413t54ayowyip4xkfi8oxg6u&st=u1tqymkf&raw=1"
+                  src="/pastora-irene.jpg"
                   alt="Pastora Irene Familia"
                   className="w-48 h-48 rounded-full mx-auto object-cover object-top shadow-lg border-4 border-amber-600"
                   style={{ objectPosition: '50% 20%' }}
