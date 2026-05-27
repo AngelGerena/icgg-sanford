@@ -5,8 +5,8 @@ import { supabase } from '../lib/supabase';
 
 const STATIC_SLIDES = [
   {
-    desktop: 'https://www.dropbox.com/scl/fi/bjp3ifh6opjn0ug5nfg62/Hero-1.jpg?rlkey=ou63aqgvc47228zv4izc0d3xn&st=q05gq7ol&raw=1',
-    mobile: 'https://www.dropbox.com/scl/fi/9eaccjgyv8twr0dly12nz/mobile-hero2.jpg?rlkey=erb1bi52pq3xos8z8754yw5oz&st=smnf3h4a&raw=1'
+    desktop: '/hero-worship-flag.jpg',
+    mobile: '/hero-worship-flag.jpg'
   },
   {
     desktop: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1',
@@ -17,8 +17,12 @@ const STATIC_SLIDES = [
     mobile: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1'
   },
   {
-    desktop: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1',
-    mobile: 'https://www.dropbox.com/scl/fi/9muoo0s2b2d63f977iea5/FM-1-23-of-38.jpg?rlkey=hezm4qm3ah87atez9fxttty9j&st=mnud5zzd&raw=1'
+    desktop: '/hero-pentecostes.jpg',
+    mobile: '/hero-pentecostes.jpg'
+  },
+  {
+    desktop: '/hero-congregation.jpg',
+    mobile: '/hero-congregation.jpg'
   }
 ];
 
