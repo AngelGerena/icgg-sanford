@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
 
 const STATIC_SLIDES = [
   {
@@ -33,92 +32,22 @@ interface HeroSlide { desktop: string; mobile: string; }
 const Hero = () => {
   const { t } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [heroImages, setHeroImages] = useState<HeroSlide[]>(STATIC_SLIDES);
-  const [videoMode, setVideoMode] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [overlay, setOverlay] = useState(DEFAULT_OVERLAY);
 
   useEffect(() => {
-    async function fetchHeroData() {
-      try {
-        const { data: slidesData } = await supabase
-          .from('hero_slides')
-          .select('image_url')
-          .eq('is_active', true)
-          .order('sort_order', { ascending: true });
-
-        if (slidesData && slidesData.length > 0) {
-          setHeroImages(slidesData.map((s: { image_url: string }) => ({
-            desktop: s.image_url,
-            mobile: s.image_url
-          })));
-        }
-
-        const { data: configData } = await supabase
-          .from('hero_config')
-          .select('mode, video_url, overlay')
-          .limit(1)
-          .maybeSingle();
-
-        if (configData) {
-          if (configData.mode === 'video' && configData.video_url) {
-            setVideoMode(true);
-            setVideoUrl(configData.video_url);
-          }
-          if (configData.overlay) {
-            setOverlay(`linear-gradient(to right, ${configData.overlay})`);
-          }
-        }
-      } catch {
-        // Fall back to static data silently
-      }
-    }
-    fetchHeroData();
-  }, []);
-
-  useEffect(() => {
-    if (videoMode) return;
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      setCurrentImageIndex((prev) => (prev + 1) % STATIC_SLIDES.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [heroImages.length, videoMode]);
-
-  if (videoMode && videoUrl) {
-    const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
-    const isVimeo = videoUrl.includes('vimeo.com');
-    return (
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          {isYouTube || isVimeo ? (
-            <iframe
-              src={`${videoUrl}?autoplay=1&mute=1&loop=1&controls=0&rel=0&playsinline=1`}
-              className="absolute inset-0 w-full h-full"
-              style={{ transform: 'scale(1.5)', border: 'none' }}
-              allow="autoplay; fullscreen"
-              title="Hero video"
-            />
-          ) : (
-            <video src={videoUrl} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
-          )}
-          <div className="absolute inset-0" style={{ background: overlay }} />
-        </div>
-        <HeroContent t={t} />
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ChevronDown className="h-8 w-8 text-white opacity-75" />
-        </div>
-      </section>
-    );
-  }
+  }, []);
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {heroImages.map((image, index) => (
+      {STATIC_SLIDES.map((image, index) => (
         <div
           key={index}
           className={`absolute inset-0 transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
           style={{
-            backgroundImage: `${overlay}, url('${image.desktop}')`,
+            backgroundImage: `${DEFAULT_OVERLAY}, url('${image.desktop}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
