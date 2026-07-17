@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#EFB3AD">
+<title>Mujer Vive — La Unción que Hace Funcionar el Propósito de Dios</title>
+<meta name="description" content="Separa tu manual Mujer Vive de la Pastora Irene Familia. Oferta de pre-lanzamiento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Hidden static form so Netlify registers it at deploy time. Do not remove. -->
+<form name="ordenes" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="orden">
+  <input type="text" name="nombre">
+  <input type="text" name="telefono">
+  <input type="email" name="correo">
+  <input type="text" name="direccion">
+  <input type="text" name="ciudad">
+  <input type="text" name="estado">
+  <input type="text" name="codigo_postal">
+  <input type="text" name="cantidad">
+  <input type="text" name="precio_unitario">
+  <input type="text" name="total">
+  <input type="text" name="metodo_pago">
+  <input type="text" name="referencia_pago">
+  <input type="text" name="etapa">
+  <input type="text" name="idioma">
+  <input type="text" name="fecha">
+  <input type="text" name="bot-field">
+</form>
+
+<!-- Language toggle -->
+<div class="lang-toggle" id="langToggle" role="group" aria-label="Idioma / Language">
+  <button type="button" class="lang-btn on" id="langEs">ES</button>
+  <button type="button" class="lang-btn" id="langEn">EN</button>
+</div>
+
+<!-- STEP 1 · ORDER -->
+<section id="step-order" class="step active">
+  <div class="flyer-hero">
+    <img src="images/flyer.jpg" alt="Mujer Vive — La Unción que Hace Funcionar el Propósito de Dios — Pastora Irene Familia">
+    <div class="flyer-fade"></div>
+  </div>
+
+  <div class="price-badge" id="priceBadge">
+    <span class="old" id="priceOld">$25</span>
+    <span class="new" id="priceNew">$20</span>
+    <span class="tag" id="priceTag">Oferta de<br>lanzamiento</span>
+  </div>
+
+  <div class="card form-card">
+    <h2 id="formTitle">Separa tu manual</h2>
+    <div class="fld">
+      <label for="fName" id="lName">Nombre completo</label>
+      <input id="fName" type="text" autocomplete="name" required>
+      <div class="err" id="eName">Escribe tu nombre completo.</div>
+    </div>
+    <div class="fld">
+      <label for="fPhone" id="lPhone">Teléfono</label>
+      <input id="fPhone" type="tel" autocomplete="tel" required>
+      <div class="err" id="ePhone">Escribe un teléfono válido.</div>
+    </div>
+    <div class="fld">
+      <label for="fEmail" id="lEmail">Correo electrónico</label>
+      <input id="fEmail" type="email" autocomplete="email" required>
+      <div class="err" id="eEmail">Escribe un correo válido.</div>
+    </div>
+    <div class="fld">
+      <label for="fAddr1" id="lAddr">Dirección de envío</label>
+      <input id="fAddr1" type="text" autocomplete="address-line1" required>
+      <div class="err" id="eAddr1">Escribe tu dirección.</div>
+    </div>
+    <div class="fld-row">
+      <div class="fld">
+        <label for="fCity" id="lCity">Ciudad</label>
+        <input id="fCity" type="text" autocomplete="address-level2" required>
+        <div class="err" id="eCity">Requerido.</div>
+      </div>
+      <div class="fld sm">
+        <label for="fState" id="lState">Estado</label>
+        <input id="fState" type="text" autocomplete="address-level1" value="FL" required>
+        <div class="err" id="eState">Requerido.</div>
+      </div>
+      <div class="fld sm">
+        <label for="fZip" id="lZip">Código postal</label>
+        <input id="fZip" type="text" autocomplete="postal-code" required>
+        <div class="err" id="eZip">Requerido.</div>
+      </div>
+    </div>
+    <div class="fld">
+      <label id="lQty">Cantidad</label>
+      <div class="qty">
+        <button type="button" id="qtyMinus" aria-label="Menos">&minus;</button>
+        <span id="qtyVal">1</span>
+        <button type="button" id="qtyPlus" aria-label="Más">+</button>
+      </div>
+    </div>
+    <button type="button" class="cta" id="btnContinue"><span id="ctaLabel">Continuar al pago</span> — <span id="ctaTotal">$20</span></button>
+    <div class="ship-note" id="shipNote"></div>
+  </div>
+
+  <div class="verse">
+    <span id="verseText">&ldquo;Porque donde Dios da una asignación, también derrama la unción para cumplirla.&rdquo;</span>
+    <b id="verseRef">BASADO EN JUECES 4&ndash;5</b>
+  </div>
+</section>
+
+<!-- STEP 2 · PAYMENT -->
+<section id="step-pay" class="step">
+  <div class="pay-wrap">
+    <h2 class="pay-title" id="payTitle">Completa tu pago</h2>
+    <div class="pay-sub"><span id="payOrderWord">Orden</span> <span id="payOrderNo"></span> &middot; <span id="payName"></span></div>
+    <div class="copy-row">
+      <button type="button" class="copy-chip" id="btnCopyPay">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copyPayLbl">Copiar número de orden</span>
+      </button>
+    </div>
+
+    <div class="total-card">
+      <div class="l" id="totalLbl">Total a pagar</div>
+      <div class="n" id="payTotal"></div>
+      <div class="d" id="payDetail"></div>
+    </div>
+
+    <div class="pay-tabs">
+      <button type="button" class="pay-tab" id="tabZelle" data-method="zelle">Zelle</button>
+      <button type="button" class="pay-tab" id="tabCash" data-method="cashapp">Cash App</button>
+    </div>
+
+    <div class="card pay-card">
+      <a id="payBtn" class="pay-btn" href="#" target="_blank" rel="noopener">Pagar con Zelle</a>
+      <div class="hint" id="payHint"></div>
+      <div class="qr-section" id="qrSection">
+        <div class="qr-ask" id="qrAsk">&iquest;Est&aacute;s viendo esto en una computadora?</div>
+        <div id="qrZone" class="qr-zone"></div>
+        <div class="qr-sub" id="qrSub">Esc&aacute;nealo con la c&aacute;mara de tu tel&eacute;fono.</div>
+      </div>
+      <div class="fallback" id="payFallback"></div>
+      <div class="verify-box">
+        <div class="verify-lbl" id="verifyLbl">Tu número de orden</div>
+        <div class="verify-num" id="verifyNum"></div>
+        <label class="check-row" for="fCheck">
+          <input id="fCheck" type="checkbox">
+          <span id="checkLbl">Ya envié mi pago con mi número de orden en el memo</span>
+        </label>
+      </div>
+      <div class="err" id="ePay" style="text-align:center"></div>
+      <button type="button" class="cta" id="btnPaid" disabled>Ya envié mi pago</button>
+      <div class="wait-note" id="waitNote" style="display:none"></div>
+      <button type="button" class="link-back" id="btnBack">Volver a mi orden</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 · CONFIRMATION -->
+<section id="step-done" class="step">
+  <div class="done-wrap">
+    <div class="seal">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#7A1F3D" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2 class="done-title" id="doneTitle">&iexcl;Tu orden está separada!</h2>
+    <div class="order-chip"><span id="doneOrderWord">ORDEN</span> <span id="doneOrderNo"></span>
+      <button type="button" class="copy-chip inline" id="btnCopyDone" aria-label="Copiar número de orden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copyDoneLbl">Copiar</span>
+      </button>
+    </div>
+    <p class="done-txt" id="doneTxt">Recibimos tu orden y estamos verificando tu pago. Te contactaremos cuando tu manual esté en camino. &iexcl;Gracias por sembrar en este proyecto!</p>
+    <div class="verse done-verse">
+      <span id="verseText2">&ldquo;Porque donde Dios da una asignación, también derrama la unción para cumplirla.&rdquo;</span>
+      <b id="verseRef2">MUJER VIVE &middot; JUECES 4&ndash;5</b>
+    </div>
+  </div>
+</section>
+
+<!-- Payment-launch guard modal -->
+<div class="modal" id="payModal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7A1F3D" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+    </div>
+    <h3 class="modal-title" id="modalTitle">Un momento</h3>
+    <p class="modal-body" id="modalBody"></p>
+    <p class="modal-fine" id="modalFine"></p>
+    <button type="button" class="cta modal-primary" id="modalOpen">Abrir Zelle</button>
+    <button type="button" class="link-back" id="modalAlt">Ya pagué de otra forma — continuar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Número de orden copiado — pégalo en la nota o memo</div>
+
+<div class="busy" id="busy"><div class="spinner"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
