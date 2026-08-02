@@ -1,9 +1,13 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteImage } from '../hooks/useSiteContent';
 import { Users, Heart, Calendar, Gift, MapPin, Coffee, BookOpen, Handshake, Clock } from 'lucide-react';
 
 const Newcomers = () => {
   const { t } = useLanguage();
+  const greeterImg = useSiteImage('newcomers_greeter', '/greeter.png');
+  const noraImg = useSiteImage('newcomers_worship', '/nora.JPG');
+  const communityImg = useSiteImage('newcomers_community', '/Community_outreach_in_action_with_joy.png');
 
   return (
     <section id="newcomers" className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -124,7 +128,7 @@ const Newcomers = () => {
             <div className="text-center">
               <div className="relative w-32 h-32 mx-auto mb-4">
                 <img
-                  src="/greeter.png"
+                  src={greeterImg}
                   alt="Welcoming team"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -135,7 +139,7 @@ const Newcomers = () => {
             <div className="text-center">
               <div className="relative w-32 h-32 mx-auto mb-4">
                 <img
-                  src="/nora.JPG"
+                  src={noraImg}
                   alt="Worship service"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -146,7 +150,7 @@ const Newcomers = () => {
             <div className="text-center">
               <div className="relative w-32 h-32 mx-auto mb-4">
                 <img
-                  src="/Community_outreach_in_action_with_joy.png"
+                  src={communityImg}
                   alt="Community fellowship"
                   className="w-full h-full object-cover rounded-full"
                 />

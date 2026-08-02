@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { SiteContentProvider } from './hooks/useSiteContent';
 import ScrollToTop from './components/ScrollToTop';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -15,6 +16,7 @@ import Eventos from './pages/Eventos';
 function App() {
   return (
     <LanguageProvider>
+      <SiteContentProvider>
       <BrowserRouter>
         <ScrollToTop />
         <div
@@ -37,6 +39,7 @@ function App() {
           <Footer />
         </div>
       </BrowserRouter>
+      </SiteContentProvider>
     </LanguageProvider>
   );
 }

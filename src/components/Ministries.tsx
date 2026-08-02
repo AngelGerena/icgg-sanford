@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Users, Baby, Music, HandHeart, GraduationCap, Home, Heart, Crown, UserCheck, Flower, Smartphone, Globe, MessageSquare, ChevronDown, ChevronRight, X, Send, Church } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteImage } from '../hooks/useSiteContent';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Ministries = () => {
   const { t } = useLanguage();
+  const pastoraImg = useSiteImage('pastora_photo', '/pastora-irene.jpg');
   const [openMinistries, setOpenMinistries] = useState<number[]>([]);
   const [isChurchFormOpen, setIsChurchFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -317,7 +319,7 @@ const Ministries = () => {
             <div className="grid md:grid-cols-3 gap-8 items-center">
               <div className="md:col-span-1">
                 <img
-                  src="/pastora-irene.jpg"
+                  src={pastoraImg}
                   alt="Pastora Irene Familia"
                   className="w-48 h-48 rounded-full mx-auto object-cover object-top shadow-lg border-4 border-amber-600"
                   style={{ objectPosition: '50% 20%' }}

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Heart, Users, Book, Cross, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteImage } from '../hooks/useSiteContent';
 import BeliefsModal from './BeliefsModal';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About = () => {
   const { t } = useLanguage();
+  const aboutImg = useSiteImage('about_image', '/feetwash.jpg');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation();
@@ -48,7 +50,7 @@ const About = () => {
         >
           <div className="transform transition-transform duration-500 hover:scale-105">
             <img
-              src="/feetwash.jpg"
+              src={aboutImg}
               alt="Lavatorio de Pies - Nuestra Tradición de Servicio"
               className="rounded-lg shadow-xl w-full h-96 object-cover"
             />

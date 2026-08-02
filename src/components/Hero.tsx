@@ -2,29 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteImage } from '../hooks/useSiteContent';
 
-const STATIC_SLIDES = [
-  {
-    desktop: '/1.jpg',
-    mobile: '/1.jpg'
-  },
-  {
-    desktop: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1',
-    mobile: 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1'
-  },
-  {
-    desktop: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1',
-    mobile: 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1'
-  },
-  {
-    desktop: '/2.jpg',
-    mobile: '/2.jpg'
-  },
-  {
-    desktop: '/3.jpg',
-    mobile: '/3.jpg'
-  }
-];
 
 // Premium navy/gold scrim - replaces the old blue gradient.
 // Darker at the edges for text legibility, lets the photo breathe in the center.
@@ -35,18 +14,30 @@ interface HeroSlide { desktop: string; mobile: string; }
 
 const Hero = () => {
   const { t } = useLanguage();
+  const s1 = useSiteImage('hero_slide_1', '/1.jpg');
+  const s2 = useSiteImage('hero_slide_2', 'https://www.dropbox.com/scl/fi/nx2yvtadqibyn0ui7ldn1/ICGG-23-of-133.jpg?rlkey=lqvr296qej8eqvqyepl9u77lr&st=y6g398tu&raw=1');
+  const s3 = useSiteImage('hero_slide_3', 'https://www.dropbox.com/scl/fi/gbb3lkzcqrn7pwz424ryo/ICCG-11-19-53-of-135.jpg?rlkey=5mr4eaq0w91l9odc1cwt5trpy&st=45emqolf&raw=1');
+  const s4 = useSiteImage('hero_slide_4', '/2.jpg');
+  const s5 = useSiteImage('hero_slide_5', '/3.jpg');
+  const SLIDES: HeroSlide[] = [
+    { desktop: s1, mobile: s1 },
+    { desktop: s2, mobile: s2 },
+    { desktop: s3, mobile: s3 },
+    { desktop: s4, mobile: s4 },
+    { desktop: s5, mobile: s5 },
+  ];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % STATIC_SLIDES.length);
+      setCurrentImageIndex((prev) => (prev + 1) % SLIDES.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
     <section id="home" className="icgg-hero relative min-h-screen flex items-center justify-center overflow-hidden">
-      {STATIC_SLIDES.map((image: HeroSlide, index) => (
+      {SLIDES.map((image: HeroSlide, index) => (
         <div
           key={index}
           className={`absolute inset-0 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
@@ -65,7 +56,7 @@ const Hero = () => {
 
       {/* Slide progress dots */}
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
-        {STATIC_SLIDES.map((_, index) => (
+        {SLIDES.map((_, index) => (
           <span
             key={index}
             className="icgg-hero-dot"

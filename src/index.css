@@ -1095,3 +1095,10 @@ section {
 }
 .icgg-eventscta-arrow { width: 18px; height: 18px; transition: transform 0.2s ease; }
 .icgg-eventscta-btn:hover .icgg-eventscta-arrow { transform: translateX(4px); }
+
+/* Anchor targets clear the fixed nav when scrolled to via dropdown links */
+#clase-pastorales, #aviva-kids, #alineados, #ministries,
+#prayer, #newcomers, #contact, #about, #services,
+#live, #livestream, #giving {
+  scroll-margin-top: 80px;
+}

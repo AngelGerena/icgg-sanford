@@ -1,9 +1,15 @@
 import React from 'react';
 import { DollarSign, Smartphone, CreditCard, Heart, Gift } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSiteImage } from '../hooks/useSiteContent';
 
 const Giving = () => {
   const { t } = useLanguage();
+  const g_zelle_logo = useSiteImage('give_zelle_logo', 'https://www.dropbox.com/scl/fi/m95hkitnjv4u5cgpma5yz/zelle-logo.png?rlkey=hfa68efnvgbmbpk63d0y1jbyn&st=bmcnu326&raw=1');
+  const g_zelle_qr = useSiteImage('give_zelle_qr', 'https://www.dropbox.com/scl/fi/tuab5djq5t8o8a4zm9omp/zelle-tithe.jpg?rlkey=04l3myk422oc3p74grs0prork&st=n79cuejg&raw=1');
+  const g_protemplo = useSiteImage('give_protemplo', 'https://www.dropbox.com/scl/fi/1eoami6nn96x93ejupjwd/protemplo.png?rlkey=dhnpa25v98d714y4cp8a3nzfu&st=3rhrssqi&raw=1');
+  const g_hero = useSiteImage('give_hero', 'https://www.dropbox.com/scl/fi/9sfdwhicc1we24xub0f3n/give.jpg?rlkey=vlv5z2fsol4ajbzysupwpb4rr&st=nqugvu5u&raw=1');
+  const g_tithely_logo = useSiteImage('give_tithely_logo', 'https://www.dropbox.com/scl/fi/ghtux1ngjbwseush1spvq/tithely-logo.png?rlkey=07kvgu4taglfuv4gmqn4pyaph&st=pwm5jddu&raw=1');
 
   return (
     <section id="giving" className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100" style={{background: 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)'}}>
@@ -35,7 +41,7 @@ const Giving = () => {
                   <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
                       <img 
-                        src="https://www.dropbox.com/scl/fi/m95hkitnjv4u5cgpma5yz/zelle-logo.png?rlkey=hfa68efnvgbmbpk63d0y1jbyn&st=bmcnu326&raw=1"
+                        src={g_zelle_logo}
                         alt="Zelle Logo"
                         className="w-full h-full object-contain"
                       />
@@ -51,7 +57,7 @@ const Giving = () => {
                         <p className="text-sm font-semibold text-gray-600 mb-3">Ofrendas y Diezmos</p>
                         <div className="flex justify-center mb-3">
                           <img 
-                            src="https://www.dropbox.com/scl/fi/tuab5djq5t8o8a4zm9omp/zelle-tithe.jpg?rlkey=04l3myk422oc3p74grs0prork&st=n79cuejg&raw=1"
+                            src={g_zelle_qr}
                             alt="Zelle QR Code for Tithe"
                             className="w-32 h-32 object-contain"
                           />
@@ -63,7 +69,7 @@ const Giving = () => {
                         <p className="text-sm font-semibold text-gray-600 mb-3">Pro-Templo</p>
                         <div className="flex justify-center mb-3">
                           <img 
-                            src="https://www.dropbox.com/scl/fi/1eoami6nn96x93ejupjwd/protemplo.png?rlkey=dhnpa25v98d714y4cp8a3nzfu&st=3rhrssqi&raw=1"
+                            src={g_protemplo}
                             alt="Zelle QR Code for Pro-Templo"
                             className="w-32 h-32 object-contain"
                           />
@@ -75,7 +81,7 @@ const Giving = () => {
                         <p className="text-sm font-semibold text-gray-600 mb-3">Misiones</p>
                         <div className="flex justify-center mb-3">
                           <img 
-                            src="https://www.dropbox.com/scl/fi/9sfdwhicc1we24xub0f3n/give.jpg?rlkey=vlv5z2fsol4ajbzysupwpb4rr&st=nqugvu5u&raw=1"
+                            src={g_hero}
                             alt="Zelle QR Code for Missions"
                             className="w-32 h-32 object-contain"
                           />
@@ -101,7 +107,7 @@ const Giving = () => {
                   <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
                       <img 
-                        src="https://www.dropbox.com/scl/fi/ghtux1ngjbwseush1spvq/tithely-logo.png?rlkey=07kvgu4taglfuv4gmqn4pyaph&st=pwm5jddu&raw=1"
+                        src={g_tithely_logo}
                         alt="Tithely Logo"
                         className="w-full h-full object-contain"
                       />

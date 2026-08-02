@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Heart, Users, MessageCircle, X, DollarSign, Smartphone } from 'lucide-react';
+import { useSiteImage } from '../hooks/useSiteContent';
 
 const ClasePastorales = () => {
+  const pastoraImg = useSiteImage('pastora_photo', '/pastora-irene.jpg');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const ClasePastorales = () => {
             <div className="flex flex-col items-center">
               <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl mb-6 border-4 border-amber-600">
                 <img
-                  src="/pastora-irene.jpg"
+                  src={pastoraImg}
                   alt="Pastora - Profile"
                   className="w-full h-full object-cover"
                 />

@@ -31,16 +31,16 @@ const Header = () => {
 
   const nosotros = [
     { to: '/nosotros', label: t('nav.about') },
-    { to: '/conectate', label: isSpanish ? 'Oración' : 'Prayer' },
-    { to: '/ministerios', label: isSpanish ? 'Clase Pastorales' : 'Pastoral Classes' },
-    { to: '/ministerios', label: 'Aviva Kids' }
+    { to: '/conectate#prayer', label: isSpanish ? 'Oración' : 'Prayer' },
+    { to: '/ministerios#clase-pastorales', label: isSpanish ? 'Clase Pastorales' : 'Pastoral Classes' },
+    { to: '/ministerios#aviva-kids', label: 'Aviva Kids' }
   ];
 
   const conectate = [
-    { to: '/conectate', label: isSpanish ? 'Soy Nuevo' : 'Im New' },
+    { to: '/conectate#newcomers', label: isSpanish ? 'Soy Nuevo' : 'Im New' },
     { to: '/eventos', label: t('nav.events') },
-    { to: '/conectate', label: t('nav.contact') },
-    { to: '/conectate', label: isSpanish ? 'Peticiones de Oración' : 'Prayer Requests' }
+    { to: '/conectate#contact', label: t('nav.contact') },
+    { to: '/conectate#prayer', label: isSpanish ? 'Peticiones de Oración' : 'Prayer Requests' }
   ];
 
   return (
