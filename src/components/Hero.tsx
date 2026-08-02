@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useSiteImage } from '../hooks/useSiteContent';
+import { useSiteImage, useSiteText } from '../hooks/useSiteContent';
 
 
 // Premium navy/gold scrim - replaces the old blue gradient.
@@ -79,7 +79,11 @@ const Hero = () => {
   );
 };
 
-const HeroContent = ({ t }: { t: (key: string) => string }) => (
+const HeroContent = ({ t }: { t: (key: string) => string }) => {
+  const { isSpanish } = useLanguage();
+  const joinLabel = useSiteText('hero_btn_join', 'Únete a Nosotros', 'Join Us', isSpanish);
+  const servicesLabel = useSiteText('hero_btn_services', 'Nuestros Servicios', 'View Services', isSpanish);
+  return (
   <div className="icgg-hero-content relative z-10 text-center px-6 max-w-4xl mx-auto">
     <p className="icgg-hero-eyebrow animate-fade-in">
       {t('hero.subtitle')}
@@ -101,13 +105,14 @@ const HeroContent = ({ t }: { t: (key: string) => string }) => (
       style={{ animationDelay: '0.75s' }}
     >
       <Link to="/conectate" className="icgg-hero-btn icgg-hero-btn-gold">
-        {t('hero.joinUs')}
+        {joinLabel}
       </Link>
       <Link to="/en-vivo" className="icgg-hero-btn icgg-hero-btn-ghost">
-        {t('hero.viewServices')}
+        {servicesLabel}
       </Link>
     </div>
   </div>
-);
+  );
+};
 
 export default Hero;

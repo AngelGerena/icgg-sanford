@@ -27,7 +27,7 @@ const translations = {
   'hero.welcome': { es: 'Bienvenidos a nuestra familia de fe', en: 'Welcome to our family of faith' },
   'hero.welcomeEn': { es: 'Welcome to our family of faith', en: 'Bienvenidos a nuestra familia de fe' },
   'hero.joinUs': { es: 'Únete a Nosotros', en: 'Join Us' },
-  'hero.viewServices': { es: 'Nuestro Servicios', en: 'View Services' },
+  'hero.viewServices': { es: 'Nuestros Servicios', en: 'View Services' },
   
   // About Section
   'about.title': { es: 'Acerca de Nosotros', en: 'About Us' },
