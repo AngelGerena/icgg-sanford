@@ -1030,3 +1030,68 @@ section {
   .icgg-eventrow-thumb { display: none; }
   .icgg-eventrow { padding: 1rem; gap: 1rem; }
 }
+
+/* ============================================================
+   FINESSE OS — Events CTA band (homepage → /eventos)
+   ============================================================ */
+.icgg-eventscta {
+  background: var(--icgg-ivory);
+  padding: 5rem 1.5rem;
+}
+.icgg-eventscta-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid rgba(20, 38, 75, 0.1);
+  border-radius: 16px;
+  padding: 3.5rem 2.5rem;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(20, 38, 75, 0.06);
+}
+.icgg-eventscta-inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 3px;
+  background: linear-gradient(to right, transparent, var(--icgg-gold), transparent);
+}
+.icgg-eventscta-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--icgg-navy) 0%, var(--icgg-navy-deep) 100%);
+  color: var(--icgg-gold);
+  margin-bottom: 1.5rem;
+}
+.icgg-eventscta-icon svg { width: 30px; height: 30px; }
+.icgg-eventscta-eyebrow {
+  font-family: 'Manrope', system-ui, sans-serif;
+  text-transform: uppercase; letter-spacing: 0.28em;
+  font-size: 0.7rem; font-weight: 700; color: var(--icgg-gold-deep);
+  margin-bottom: 0.85rem;
+}
+.icgg-eventscta-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--icgg-navy); font-weight: 600;
+  font-size: clamp(2rem, 4.5vw, 2.9rem); line-height: 1.1;
+  margin: 0 0 1rem;
+}
+.icgg-eventscta-text {
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: #4b5563; font-size: 1.05rem; line-height: 1.65;
+  max-width: 540px; margin: 0 auto 2rem;
+}
+.icgg-eventscta-btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 700; font-size: 1rem;
+  background: #C9A961; color: #0A1530;
+  padding: 1rem 2.5rem; border-radius: 4px;
+  transition: all 0.25s ease;
+}
+.icgg-eventscta-btn:hover {
+  background: #d8bd7f; transform: translateY(-2px);
+  box-shadow: 0 14px 38px rgba(201, 169, 97, 0.4);
+}
+.icgg-eventscta-arrow { width: 18px; height: 18px; transition: transform 0.2s ease; }
+.icgg-eventscta-btn:hover .icgg-eventscta-arrow { transform: translateX(4px); }
