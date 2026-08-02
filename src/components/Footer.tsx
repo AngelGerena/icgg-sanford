@@ -1,5 +1,6 @@
 import React from 'react';
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Cross, Music } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer = () => {
@@ -43,44 +44,44 @@ const Footer = () => {
             <h4 className="text-xl font-bold mb-6">{t('footer.quickLinks')}</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#about" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/nosotros" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.about')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#prayer" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/conectate" className="text-gray-300 hover:text-white transition-colors">
                   Oración
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#live" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/en-vivo" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.live')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/en-vivo" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.services')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#ministries" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/ministerios" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.ministries')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#events" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/conectate" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.events')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#contact" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/conectate" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.contact')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#giving" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/dar" className="text-gray-300 hover:text-white transition-colors">
                   {t('nav.giving')}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

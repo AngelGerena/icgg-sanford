@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const STATIC_SLIDES = [
@@ -25,7 +26,10 @@ const STATIC_SLIDES = [
   }
 ];
 
-const DEFAULT_OVERLAY = 'linear-gradient(to right, rgba(30, 58, 138, 0.8), rgba(30, 64, 175, 0.7), rgba(59, 130, 246, 0.6))';
+// Premium navy/gold scrim - replaces the old blue gradient.
+// Darker at the edges for text legibility, lets the photo breathe in the center.
+const OVERLAY =
+  'linear-gradient(to bottom, rgba(10,21,48,0.72) 0%, rgba(10,21,48,0.38) 38%, rgba(10,21,48,0.55) 72%, rgba(10,21,48,0.88) 100%)';
 
 interface HeroSlide { desktop: string; mobile: string; }
 
@@ -41,48 +45,76 @@ const Hero = () => {
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {STATIC_SLIDES.map((image, index) => (
+    <section id="home" className="icgg-hero relative min-h-screen flex items-center justify-center overflow-hidden">
+      {STATIC_SLIDES.map((image: HeroSlide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
           style={{
-            backgroundImage: `${DEFAULT_OVERLAY}, url('${image.desktop}')`,
+            backgroundImage: `${OVERLAY}, url('${image.desktop}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
+            backgroundRepeat: 'no-repeat',
+            transform: index === currentImageIndex ? 'scale(1.06)' : 'scale(1)',
+            transition: 'opacity 1400ms ease-in-out, transform 7000ms ease-out'
           }}
         />
       ))}
+
       <HeroContent t={t} />
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" style={{ backgroundColor: 'transparent' }}>
-        <ChevronDown className="h-8 w-8 text-white opacity-75" />
+
+      {/* Slide progress dots */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
+        {STATIC_SLIDES.map((_, index) => (
+          <span
+            key={index}
+            className="icgg-hero-dot"
+            data-active={index === currentImageIndex ? 'true' : 'false'}
+          />
+        ))}
       </div>
+
+      {/* Elegant scroll cue */}
+      <a
+        href="#about"
+        aria-label="Scroll"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/70 hover:text-white transition-colors"
+        style={{ backgroundColor: 'transparent' }}
+      >
+        <span className="icgg-hero-scrolltext">Desliza</span>
+        <ChevronDown className="h-6 w-6 animate-bounce" />
+      </a>
     </section>
   );
 };
 
 const HeroContent = ({ t }: { t: (key: string) => string }) => (
-  <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-    <div className="mb-8 animate-fade-in">
-      <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight animate-slide-up">
-        {t('hero.title')}
-      </h1>
-      <h2 className="text-2xl md:text-4xl font-light text-blue-100 mb-6 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-        Iglesia Cristiana Gracia y Gloria Sanford
-      </h2>
-      <div className="w-24 h-1 bg-amber-500 mx-auto mb-8 animate-scale-in" style={{ animationDelay: '0.4s' }}></div>
-    </div>
-    <p className="text-xl md:text-2xl text-blue-100 mb-8 font-light animate-fade-in" style={{ animationDelay: '0.6s' }}>
+  <div className="icgg-hero-content relative z-10 text-center px-6 max-w-4xl mx-auto">
+    <p className="icgg-hero-eyebrow animate-fade-in">
+      {t('hero.subtitle')}
+    </p>
+
+    <h1 className="icgg-hero-title animate-slide-up">
+      Ven a casa,
+      <span className="icgg-hero-title-accent"> te estábamos esperando</span>
+    </h1>
+
+    <div className="icgg-hero-divider animate-scale-in" style={{ animationDelay: '0.35s' }} />
+
+    <p className="icgg-hero-welcome animate-fade-in" style={{ animationDelay: '0.55s' }}>
       {t('hero.welcome')}
     </p>
-    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{ animationDelay: '0.8s' }}>
-      <a href="#live" className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg">
+
+    <div
+      className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in"
+      style={{ animationDelay: '0.75s' }}
+    >
+      <Link to="/conectate" className="icgg-hero-btn icgg-hero-btn-gold">
         {t('hero.joinUs')}
-      </a>
-      <a href="#services" className="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 inline-block hover:shadow-2xl">
+      </Link>
+      <Link to="/en-vivo" className="icgg-hero-btn icgg-hero-btn-ghost">
         {t('hero.viewServices')}
-      </a>
+      </Link>
     </div>
   </div>
 );
