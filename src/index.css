@@ -1102,3 +1102,27 @@ section {
 #live, #livestream, #giving {
   scroll-margin-top: 80px;
 }
+
+/* Event share button (flyer card + list row) */
+.icgg-event-share {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  margin-top: 0.9rem;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 600; font-size: 0.8rem;
+  color: var(--icgg-navy);
+  background: rgba(20, 38, 75, 0.06);
+  border: 1px solid rgba(20, 38, 75, 0.12);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.icgg-event-share svg { width: 15px; height: 15px; }
+.icgg-event-share:hover {
+  background: var(--icgg-navy);
+  color: var(--icgg-gold);
+  border-color: var(--icgg-navy);
+  transform: translateY(-1px);
+}
+.icgg-event-share-sm { margin-top: 0.7rem; padding: 0.4rem 0.9rem; font-size: 0.75rem; }
+

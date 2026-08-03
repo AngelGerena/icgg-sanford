@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, LayoutGrid, List } from 'lucide-react';
+import { Calendar, Clock, MapPin, LayoutGrid, List, Share2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -157,6 +157,41 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
   const [events, setEvents] = useState<EventItem[]>(limit ? SEED_EVENTS.slice(0, limit) : SEED_EVENTS);
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<'flyer' | 'list'>(defaultView);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  async function shareEvent(e: EventItem) {
+    const title = isSpanish ? e.title_es : (e.title_en || e.title_es);
+    const desc = (isSpanish ? e.description : (e.description_en || e.description)) || '';
+    const when = e.date_label || '';
+    const where = e.location || '';
+    const pageUrl = typeof window !== 'undefined' ? `${window.location.origin}/eventos` : 'https://icgg.us/eventos';
+    const lines = [
+      `${title}`,
+      when ? (isSpanish ? `📅 ${when}` : `📅 ${when}`) : '',
+      where ? `📍 ${where}` : '',
+      desc,
+      isSpanish ? `Más info: ${pageUrl}` : `More info: ${pageUrl}`,
+    ].filter(Boolean);
+    const shareText = lines.join('\n');
+
+    // Native share sheet — works across every app the visitor has (WhatsApp, SMS, email, social…)
+    if (typeof navigator !== 'undefined' && (navigator as any).share) {
+      try {
+        await (navigator as any).share({ title, text: shareText, url: pageUrl });
+        return;
+      } catch {
+        // user canceled or share failed — fall through to copy
+      }
+    }
+    // Fallback: copy the text to clipboard and show a brief confirmation
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setCopiedId(e.id);
+      setTimeout(() => setCopiedId((c) => (c === e.id ? null : c)), 2000);
+    } catch {
+      /* clipboard blocked — nothing more we can do silently */
+    }
+  }
 
   useEffect(() => {
     async function fetchEvents() {
@@ -250,6 +285,17 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
                     {e.location && <span><MapPin /> {e.location}</span>}
                   </div>
                   {desc && <p className="icgg-eventrow-desc">{desc}</p>}
+                  <button
+                    type="button"
+                    className="icgg-event-share icgg-event-share-sm"
+                    onClick={() => shareEvent(e)}
+                    aria-label={isSpanish ? 'Compartir evento' : 'Share event'}
+                  >
+                    <Share2 />
+                    {copiedId === e.id
+                      ? (isSpanish ? '¡Copiado!' : 'Copied!')
+                      : (isSpanish ? 'Compartir' : 'Share')}
+                  </button>
                 </div>
                 {e.flyer_url && (
                   <div className="icgg-eventrow-thumb" style={{ backgroundImage: `url('${e.flyer_url}')` }} />
@@ -292,6 +338,17 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
                 {!compact && e.description && (
                   <p className="icgg-flyercard-desc">{isSpanish ? e.description : (e.description_en || e.description)}</p>
                 )}
+                <button
+                  type="button"
+                  className="icgg-event-share"
+                  onClick={() => shareEvent(e)}
+                  aria-label={isSpanish ? 'Compartir evento' : 'Share event'}
+                >
+                  <Share2 />
+                  {copiedId === e.id
+                    ? (isSpanish ? '¡Copiado!' : 'Copied!')
+                    : (isSpanish ? 'Compartir' : 'Share')}
+                </button>
               </div>
             </article>
           );
