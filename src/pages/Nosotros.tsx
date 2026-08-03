@@ -12,6 +12,7 @@ const Nosotros = () => {
       <PageHeader
         title={isSpanish ? 'Nosotros' : 'About Us'}
         subtitle={isSpanish ? 'Conoce nuestra familia de fe' : 'Get to know our family of faith'}
+        image="/header-nosotros.jpg"
       />
       <About />
     </div>

@@ -1126,3 +1126,27 @@ section {
 }
 .icgg-event-share-sm { margin-top: 0.7rem; padding: 0.4rem 0.9rem; font-size: 0.75rem; }
 
+
+/* Page header with background photo (Option A) — falls back to navy band when no image */
+.icgg-pageheader-photo {
+  background: var(--icgg-navy-deep); /* base behind the image */
+}
+.icgg-pageheader-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+/* Navy scrim over the photo so the gold/white title stays readable */
+.icgg-pageheader-photo .icgg-pageheader-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(10,21,48,0.72) 0%, rgba(20,38,75,0.68) 100%);
+}
+.icgg-pageheader-photo .icgg-pageheader-inner {
+  position: relative;
+  z-index: 1;
+}
