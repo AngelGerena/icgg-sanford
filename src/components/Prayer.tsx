@@ -47,13 +47,13 @@ const Prayer = () => {
   };
 
   return (
-    <section id="prayer" className="py-20 bg-gradient-to-br from-blue-50 to-indigo-50">
+    <section id="prayer" className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {t('prayer.title')}
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
+          <div className="w-24 h-1 bg-amber-500 mx-auto mb-6"></div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {t('prayer.subtitle')}
           </p>
@@ -76,8 +76,8 @@ const Prayer = () => {
             ) : (
               <>
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                    <Heart className="h-8 w-8 text-blue-600" />
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
+                    <Heart className="h-8 w-8 text-amber-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {t('prayer.formTitle')}
@@ -99,7 +99,7 @@ const Prayer = () => {
                       value={formData.fullName}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       placeholder={t('prayer.fullNamePlaceholder')}
                     />
                   </div>
@@ -115,7 +115,7 @@ const Prayer = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       placeholder={t('prayer.emailPlaceholder')}
                     />
                   </div>
@@ -130,7 +130,7 @@ const Prayer = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
                       placeholder={t('prayer.phonePlaceholder')}
                     />
                   </div>
@@ -146,13 +146,13 @@ const Prayer = () => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all resize-none"
                       placeholder={t('prayer.messagePlaceholder')}
                     ></textarea>
                   </div>
 
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-800">
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                    <p className="text-sm text-amber-900">
                       <strong>{t('prayer.confidentiality')}</strong> {t('prayer.confidentialityMessage')}
                     </p>
                   </div>
@@ -160,7 +160,7 @@ const Prayer = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
                   >
                     <Send className="h-5 w-5" />
                     <span>{isSubmitting ? t('prayer.sending') : t('prayer.submit')}</span>
