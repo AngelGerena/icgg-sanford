@@ -2,8 +2,10 @@ import React from 'react';
 import EventsFeed from '../components/EventsFeed';
 import PageHeader from '../components/PageHeader';
 import { useLanguage } from '../contexts/LanguageContext';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 const Eventos = () => {
+  usePageMeta('Eventos - Iglesia Cristiana Gracia y Gloria', 'Próximos eventos, conferencias, ayunos y servicios especiales en Iglesia Cristiana Gracia y Gloria, Sanford FL.');
   const { isSpanish } = useLanguage();
   return (
     <div className="icgg-page">

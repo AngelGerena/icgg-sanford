@@ -7,7 +7,7 @@ import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const About = () => {
   const { t } = useLanguage();
-  const aboutImg = useSiteImage('about_image', '/feetwash.jpg');
+  const aboutImg = useSiteImage('about_image', '/nuestra-mision.jpg');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation();
@@ -51,7 +51,7 @@ const About = () => {
           <div className="transform transition-transform duration-500 hover:scale-105">
             <img
               src={aboutImg}
-              alt="Lavatorio de Pies - Nuestra Tradición de Servicio"
+              alt="Adoración con banderas - Nuestra Misión"
               className="rounded-lg shadow-xl w-full h-96 object-cover"
             />
           </div>
