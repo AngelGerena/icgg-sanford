@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Languages, ChevronDown } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { isLiveNow } from '../lib/liveSchedule';
 
 const LOGO_SRC = '/icgg-logo.png';
 
@@ -10,6 +11,15 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [drawerGroup, setDrawerGroup] = useState<string | null>(null);
+  const [live, setLive] = useState(() => isLiveNow());
+
+  useEffect(() => {
+    const tick = () => setLive(isLiveNow());
+    const id = setInterval(tick, 60_000);
+    const onFocus = () => tick();
+    window.addEventListener('focus', onFocus);
+    return () => { clearInterval(id); window.removeEventListener('focus', onFocus); };
+  }, []);
   const { isSpanish, toggleLanguage, t } = useLanguage();
   const location = useLocation();
 
@@ -78,7 +88,15 @@ const Header = () => {
           </div>
 
           <Link to="/ministerios" className="icgg-nav-link" onClick={closeAll}>{t('nav.ministries')}</Link>
-          <Link to="/en-vivo" className="icgg-nav-link" onClick={closeAll}>{t('nav.live')}</Link>
+          <Link
+            to="/en-vivo"
+            className={`icgg-nav-live ${live ? 'is-live' : ''}`}
+            onClick={closeAll}
+          >
+            <span className="icgg-nav-livedot" aria-hidden="true" />
+            <span>{t('nav.live')}</span>
+            {live && <span className="sr-only">{isSpanish ? ' — transmitiendo ahora' : ' — streaming now'}</span>}
+          </Link>
           <Link to="/predicaciones" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
           <Link to="/blog" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>
 
@@ -131,7 +149,10 @@ const Header = () => {
         <Link to="/" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.home')}</Link>
         <Link to="/nosotros" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.about')}</Link>
         <Link to="/ministerios" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.ministries')}</Link>
-        <Link to="/en-vivo" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.live')}</Link>
+        <Link to="/en-vivo" className={`icgg-nav-drawerlink ${live ? 'is-live' : ''}`} onClick={closeAll}>
+          <span className="icgg-nav-livedot" aria-hidden="true" />
+          {t('nav.live')}
+        </Link>
         <Link to="/predicaciones" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
         <Link to="/blog" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>
 

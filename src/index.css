@@ -1343,3 +1343,69 @@ section {
 }
 .icgg-nav-drawersublink:hover,
 .icgg-nav-drawersublink:active { color: var(--icgg-gold); }
+
+/* En Vivo — a quiet pill most of the week, a live indicator during service */
+.icgg-nav-live {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: .32rem .8rem;
+  font-size: .82rem;
+  line-height: 1;
+  transition: color .2s ease, border-color .2s ease, background-color .2s ease;
+}
+.icgg-nav-live:hover,
+.icgg-nav-live:focus-visible { color: var(--icgg-gold); border-color: var(--icgg-gold); }
+
+.icgg-nav-livedot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.38);
+  flex-shrink: 0;
+  transition: background-color .2s ease;
+}
+
+/* Only during a scheduled service does this turn red and breathe. */
+.icgg-nav-live.is-live {
+  color: #ffd9d9;
+  border-color: #E24B4A;
+  background: rgba(226,75,74,0.16);
+}
+.icgg-nav-live.is-live:hover { color: #fff; border-color: #E24B4A; }
+.icgg-nav-live.is-live .icgg-nav-livedot {
+  background: #E24B4A;
+  animation: icgg-live-pulse 2s ease-in-out infinite;
+}
+
+.icgg-nav-drawerlink.is-live { color: #ff9d9d; display: flex; align-items: center; gap: .5rem; }
+.icgg-nav-drawerlink.is-live .icgg-nav-livedot {
+  background: #E24B4A;
+  animation: icgg-live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icgg-live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(226,75,74,0.65); }
+  70%      { box-shadow: 0 0 0 7px rgba(226,75,74,0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icgg-nav-live.is-live .icgg-nav-livedot,
+  .icgg-nav-drawerlink.is-live .icgg-nav-livedot { animation: none; }
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Nothing in the bar may break mid-phrase. This is what was splitting
+   "En Vivo" and "Contra la Corriente" across two lines. */
+.icgg-nav-link,
+.icgg-nav-trigger,
+.icgg-nav-dropitem,
+.icgg-nav-give { white-space: nowrap; }
