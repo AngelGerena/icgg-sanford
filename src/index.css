@@ -1315,3 +1315,31 @@ section {
   .icgg-blog-section { padding: 2rem 1rem 3.5rem; }
   .icgg-share-btn span { font-size: .82rem; }
 }
+
+/* Nested Conéctate group inside the mobile drawer */
+.icgg-nav-drawertoggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: none; border: none; text-align: left;
+  font: inherit; cursor: pointer;
+}
+.icgg-nav-drawerchev {
+  width: 1rem; height: 1rem; flex-shrink: 0;
+  transition: transform .2s ease; opacity: .7;
+}
+.icgg-nav-drawertoggle.is-open .icgg-nav-drawerchev { transform: rotate(180deg); }
+.icgg-nav-drawertoggle.is-open { color: var(--icgg-gold); }
+
+.icgg-nav-drawersub {
+  display: flex; flex-direction: column;
+  margin: -.15rem 0 .35rem;
+  border-left: 2px solid rgba(255,255,255,0.16);
+  padding-left: .9rem; margin-left: .35rem;
+}
+.icgg-nav-drawersublink {
+  color: rgba(255,255,255,0.78);
+  font-size: .93rem; text-decoration: none;
+  padding: .7rem 0; min-height: 44px;
+  display: flex; align-items: center;
+}
+.icgg-nav-drawersublink:hover,
+.icgg-nav-drawersublink:active { color: var(--icgg-gold); }

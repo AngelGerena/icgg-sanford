@@ -9,6 +9,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [drawerGroup, setDrawerGroup] = useState<string | null>(null);
   const { isSpanish, toggleLanguage, t } = useLanguage();
   const location = useLocation();
 
@@ -27,6 +28,7 @@ const Header = () => {
   const closeAll = () => {
     setIsMenuOpen(false);
     setOpenGroup(null);
+    setDrawerGroup(null);
   };
 
   const nosotros = [
@@ -131,8 +133,29 @@ const Header = () => {
         <Link to="/ministerios" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.ministries')}</Link>
         <Link to="/en-vivo" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.live')}</Link>
         <Link to="/predicaciones" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
-        <Link to="/conectate" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Conéctate' : 'Connect'}</Link>
-        <Link to="/eventos" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.events')}</Link>
+        <Link to="/blog" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>
+
+        {/* Conéctate mirrors the desktop dropdown: tapping it expands the same
+            four destinations rather than jumping straight to the page. */}
+        <button
+          type="button"
+          className={`icgg-nav-drawerlink icgg-nav-drawertoggle ${drawerGroup === 'conectate' ? 'is-open' : ''}`}
+          aria-expanded={drawerGroup === 'conectate'}
+          onClick={() => setDrawerGroup(g => (g === 'conectate' ? null : 'conectate'))}
+        >
+          {isSpanish ? 'Conéctate' : 'Connect'}
+          <ChevronDown className="icgg-nav-drawerchev" />
+        </button>
+        {drawerGroup === 'conectate' && (
+          <div className="icgg-nav-drawersub">
+            {conectate.map((item, i) => (
+              <Link key={i} to={item.to} className="icgg-nav-drawersublink" onClick={closeAll}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
         <Link to="/dar" className="icgg-nav-drawerlink icgg-nav-drawergive" onClick={closeAll}>{t('nav.giving')}</Link>
         <button
           onClick={() => { toggleLanguage(); }}
