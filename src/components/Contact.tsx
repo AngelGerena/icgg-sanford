@@ -212,7 +212,8 @@ const Contact = () => {
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                    {t('contact.phone')}
+                    {t('contact.phone')}{' '}
+                    <span className="font-normal text-gray-400">({t('prayer.optional')})</span>
                   </label>
                   <input
                     type="tel"
@@ -226,7 +227,8 @@ const Contact = () => {
                 </div>
                 <div>
                   <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    {t('contact.subject')} *
+                    {t('contact.subject')}{' '}
+                    <span className="font-normal text-gray-400">({t('prayer.optional')})</span>
                   </label>
                   <select
                     id="subject"
