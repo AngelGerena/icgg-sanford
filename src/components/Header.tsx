@@ -108,24 +108,17 @@ const Header = () => {
             onMouseEnter={() => setOpenGroup('contracorriente')}
             onMouseLeave={() => setOpenGroup(null)}
           >
-            <button
-              type="button"
-              className="icgg-nav-trigger"
-              aria-expanded={openGroup === 'contracorriente'}
-              onClick={() => setOpenGroup(g => (g === 'contracorriente' ? null : 'contracorriente'))}
-            >
+            <button className="icgg-nav-link icgg-nav-trigger" type="button">
               {isSpanish ? 'Contra Corriente' : 'Against the Current'}
               <ChevronDown className="icgg-nav-caret" />
             </button>
-            {openGroup === 'contracorriente' && (
-              <div className="icgg-nav-dropdown">
-                {contraCorriente.map((item, i) => (
-                  <Link key={i} to={item.to} className="icgg-nav-dropitem" onClick={closeAll}>
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <div className={`icgg-nav-dropdown ${openGroup === 'contracorriente' ? 'is-open' : ''}`}>
+              {contraCorriente.map((item, i) => (
+                <Link key={i} to={item.to} className="icgg-nav-dropitem" onClick={closeAll}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div

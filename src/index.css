@@ -1445,3 +1445,13 @@ section {
   color: #4b5563;
   margin: .5rem 0 0;
 }
+
+/* A nav trigger must never let its caret wrap onto a second line, which is
+   what happened when the bar ran out of room for a long label. */
+.icgg-nav-trigger {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.icgg-nav-caret { flex-shrink: 0; }
+.icgg-nav-links { flex-wrap: nowrap; }
