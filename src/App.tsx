@@ -13,6 +13,7 @@ import EnVivo from './pages/EnVivo';
 import Dar from './pages/Dar';
 import Eventos from './pages/Eventos';
 import Predicaciones from './pages/Predicaciones';
+import ContraCorriente from './pages/ContraCorriente';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/dar" element={<Dar />} />
               <Route path="/eventos" element={<Eventos />} />
               <Route path="/predicaciones" element={<Predicaciones />} />
+              <Route path="/contra-corriente" element={<ContraCorriente />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="*" element={<Home />} />

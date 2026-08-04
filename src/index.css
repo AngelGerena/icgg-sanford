@@ -1432,8 +1432,16 @@ section {
 }
 
 /* Nothing in the bar may break mid-phrase. This is what was splitting
-   "En Vivo" and "Contra la Corriente" across two lines. */
+   "En Vivo" and "Contra Corriente" across two lines. */
 .icgg-nav-link,
 .icgg-nav-trigger,
 .icgg-nav-dropitem,
 .icgg-nav-give { white-space: nowrap; }
+
+/* Podcast episode description, shared with the sermon layout */
+.icgg-podcast-desc {
+  font-size: .95rem;
+  line-height: 1.7;
+  color: #4b5563;
+  margin: .5rem 0 0;
+}

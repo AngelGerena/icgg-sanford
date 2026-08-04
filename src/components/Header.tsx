@@ -49,6 +49,11 @@ const Header = () => {
     { to: '/conectate#prayer', label: isSpanish ? 'Oración' : 'Prayer' }
   ];
 
+  const contraCorriente = [
+    { to: '/contra-corriente', label: isSpanish ? 'Episodios' : 'Episodes' },
+    { to: '/blog', label: isSpanish ? 'Artículos' : 'Articles' }
+  ];
+
   const conectate = [
     { to: '/conectate#newcomers', label: isSpanish ? 'Soy Nuevo' : 'Im New' },
     { to: '/eventos', label: t('nav.events') },
@@ -98,7 +103,30 @@ const Header = () => {
             {live && <span className="sr-only">{isSpanish ? ' — transmitiendo ahora' : ' — streaming now'}</span>}
           </Link>
           <Link to="/predicaciones" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
-          <Link to="/blog" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>
+          <div
+            className="icgg-nav-group"
+            onMouseEnter={() => setOpenGroup('contracorriente')}
+            onMouseLeave={() => setOpenGroup(null)}
+          >
+            <button
+              type="button"
+              className="icgg-nav-trigger"
+              aria-expanded={openGroup === 'contracorriente'}
+              onClick={() => setOpenGroup(g => (g === 'contracorriente' ? null : 'contracorriente'))}
+            >
+              {isSpanish ? 'Contra Corriente' : 'Against the Current'}
+              <ChevronDown className="icgg-nav-caret" />
+            </button>
+            {openGroup === 'contracorriente' && (
+              <div className="icgg-nav-dropdown">
+                {contraCorriente.map((item, i) => (
+                  <Link key={i} to={item.to} className="icgg-nav-dropitem" onClick={closeAll}>
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div
             className="icgg-nav-group"
@@ -181,7 +209,24 @@ const Header = () => {
           )}
         </Link>
         <Link to="/predicaciones" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
-        <Link to="/blog" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>
+        <button
+          type="button"
+          className={`icgg-nav-drawerlink icgg-nav-drawertoggle ${drawerGroup === 'contracorriente' ? 'is-open' : ''}`}
+          aria-expanded={drawerGroup === 'contracorriente'}
+          onClick={() => setDrawerGroup(g => (g === 'contracorriente' ? null : 'contracorriente'))}
+        >
+          {isSpanish ? 'Contra Corriente' : 'Against the Current'}
+          <ChevronDown className="icgg-nav-drawerchev" />
+        </button>
+        {drawerGroup === 'contracorriente' && (
+          <div className="icgg-nav-drawersub">
+            {contraCorriente.map((item, i) => (
+              <Link key={i} to={item.to} className="icgg-nav-drawersublink" onClick={closeAll}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Conéctate mirrors the desktop dropdown: tapping it expands the same
             four destinations rather than jumping straight to the page. */}

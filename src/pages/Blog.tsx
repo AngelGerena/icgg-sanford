@@ -26,7 +26,7 @@ const Blog = () => {
   const { isSpanish } = useLanguage();
   usePageMeta(
     isSpanish
-      ? 'Contra la Corriente - Iglesia Cristiana Gracia y Gloria'
+      ? 'Contra Corriente - Iglesia Cristiana Gracia y Gloria'
       : 'Against the Current - Iglesia Cristiana Gracia y Gloria',
     isSpanish
       ? 'Reflexiones, enseñanza y aliento desde Iglesia Cristiana Gracia y Gloria en Sanford, FL.'
@@ -60,7 +60,7 @@ const Blog = () => {
   return (
     <div className="icgg-page">
       <PageHeader
-        title={isSpanish ? 'Contra la Corriente' : 'Against the Current'}
+        title={isSpanish ? 'Contra Corriente' : 'Against the Current'}
         subtitle={isSpanish
           ? 'Reflexiones desde Gracia y Gloria'
           : 'Reflections from Gracia y Gloria'}

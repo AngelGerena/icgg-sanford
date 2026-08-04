@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Play, Calendar, Clock, BookOpen, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useLanguage } from '../contexts/LanguageContext';
+import { toEmbedUrl, fmtDate } from '../lib/video';
 
 interface Sermon {
   id: string;
@@ -15,31 +16,6 @@ interface Sermon {
   video_url: string | null;
   cover_url: string | null;
   status: string;
-}
-
-/** Turn a YouTube or Facebook watch URL into an embeddable player URL. */
-function toEmbedUrl(url: string): { type: 'youtube' | 'facebook' | 'link'; src: string } {
-  const u = url.trim();
-  const yt = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|live\/|embed\/))([\w-]{11})/);
-  if (yt) return { type: 'youtube', src: `https://www.youtube.com/embed/${yt[1]}?autoplay=1` };
-  if (/facebook\.com/.test(u)) {
-    return {
-      type: 'facebook',
-      src: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(u)}&show_text=false&autoplay=true`,
-    };
-  }
-  return { type: 'link', src: u };
-}
-
-function fmtDate(d: string | null, isSpanish: boolean): string {
-  if (!d) return '';
-  try {
-    return new Intl.DateTimeFormat(isSpanish ? 'es' : 'en', {
-      day: 'numeric', month: 'long', year: 'numeric',
-    }).format(new Date(d + 'T00:00:00'));
-  } catch {
-    return d;
-  }
 }
 
 const SermonsFeed = () => {
