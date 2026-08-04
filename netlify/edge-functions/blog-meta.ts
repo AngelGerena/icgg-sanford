@@ -73,7 +73,7 @@ export default async function handler(request: Request, context: any) {
 
   if (!post) return response;
 
-  const title = truncate(post.meta_title_es || post.title_es || 'Blog', 70);
+  const title = truncate(post.meta_title_es || post.title_es || 'Contra la Corriente', 70);
   const description = truncate(
     post.meta_description_es || post.excerpt_es || '',
     200

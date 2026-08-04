@@ -26,8 +26,8 @@ const Blog = () => {
   const { isSpanish } = useLanguage();
   usePageMeta(
     isSpanish
-      ? 'Blog - Iglesia Cristiana Gracia y Gloria'
-      : 'Blog - Iglesia Cristiana Gracia y Gloria',
+      ? 'Contra la Corriente - Iglesia Cristiana Gracia y Gloria'
+      : 'Against the Current - Iglesia Cristiana Gracia y Gloria',
     isSpanish
       ? 'Reflexiones, enseñanza y aliento desde Iglesia Cristiana Gracia y Gloria en Sanford, FL.'
       : 'Reflections, teaching and encouragement from Iglesia Cristiana Gracia y Gloria in Sanford, FL.'
@@ -60,8 +60,10 @@ const Blog = () => {
   return (
     <div className="icgg-page">
       <PageHeader
-        title="Blog"
-        subtitle={isSpanish ? 'Palabra, aliento y vida de iglesia' : 'Word, encouragement and church life'}
+        title={isSpanish ? 'Contra la Corriente' : 'Against the Current'}
+        subtitle={isSpanish
+          ? 'Reflexiones desde Gracia y Gloria'
+          : 'Reflections from Gracia y Gloria'}
       />
 
       <section className="icgg-blog-section">

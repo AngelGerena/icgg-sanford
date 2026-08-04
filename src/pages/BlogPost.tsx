@@ -59,7 +59,7 @@ const BlogPost = () => {
   usePageMeta(
     post
       ? `${(isSpanish ? post.meta_title_es : post.meta_title_en) || title} - Iglesia Cristiana Gracia y Gloria`
-      : 'Blog - Iglesia Cristiana Gracia y Gloria',
+      : (isSpanish ? 'Contra la Corriente - Iglesia Cristiana Gracia y Gloria' : 'Against the Current - Iglesia Cristiana Gracia y Gloria'),
     post ? (isSpanish ? post.meta_description_es : post.meta_description_en) || excerpt : undefined
   );
 
@@ -85,7 +85,7 @@ const BlogPost = () => {
             </p>
             <Link to="/blog" className="icgg-article-back">
               <ArrowLeft size={16} />
-              {isSpanish ? 'Volver al blog' : 'Back to the blog'}
+              {isSpanish ? 'Volver a Contra la Corriente' : 'Back to Against the Current'}
             </Link>
           </div>
         </section>
@@ -109,7 +109,7 @@ const BlogPost = () => {
         <div className="icgg-article">
           <Link to="/blog" className="icgg-article-back">
             <ArrowLeft size={16} />
-            {isSpanish ? 'Blog' : 'Blog'}
+            {isSpanish ? 'Contra la Corriente' : 'Against the Current'}
           </Link>
 
           <h1 className="icgg-article-title">{title}</h1>
