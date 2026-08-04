@@ -78,6 +78,7 @@ const Header = () => {
           <Link to="/ministerios" className="icgg-nav-link" onClick={closeAll}>{t('nav.ministries')}</Link>
           <Link to="/en-vivo" className="icgg-nav-link" onClick={closeAll}>{t('nav.live')}</Link>
           <Link to="/predicaciones" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
+          <Link to="/blog" className="icgg-nav-link" onClick={closeAll}>Blog</Link>
 
           <div
             className="icgg-nav-group"
