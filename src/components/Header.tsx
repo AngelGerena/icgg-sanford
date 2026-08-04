@@ -77,6 +77,7 @@ const Header = () => {
 
           <Link to="/ministerios" className="icgg-nav-link" onClick={closeAll}>{t('nav.ministries')}</Link>
           <Link to="/en-vivo" className="icgg-nav-link" onClick={closeAll}>{t('nav.live')}</Link>
+          <Link to="/predicaciones" className="icgg-nav-link" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
 
           <div
             className="icgg-nav-group"
@@ -128,6 +129,7 @@ const Header = () => {
         <Link to="/nosotros" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.about')}</Link>
         <Link to="/ministerios" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.ministries')}</Link>
         <Link to="/en-vivo" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.live')}</Link>
+        <Link to="/predicaciones" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
         <Link to="/conectate" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Conéctate' : 'Connect'}</Link>
         <Link to="/eventos" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.events')}</Link>
         <Link to="/dar" className="icgg-nav-drawerlink icgg-nav-drawergive" onClick={closeAll}>{t('nav.giving')}</Link>

@@ -12,6 +12,7 @@ import Conectate from './pages/Conectate';
 import EnVivo from './pages/EnVivo';
 import Dar from './pages/Dar';
 import Eventos from './pages/Eventos';
+import Predicaciones from './pages/Predicaciones';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
               <Route path="/en-vivo" element={<EnVivo />} />
               <Route path="/dar" element={<Dar />} />
               <Route path="/eventos" element={<Eventos />} />
+              <Route path="/predicaciones" element={<Predicaciones />} />
               <Route path="*" element={<Home />} />
             </Routes>
           </main>
