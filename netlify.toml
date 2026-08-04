@@ -2,17 +2,6 @@
   command = "npm install && npm run build"
   publish = "dist"
 
-# Injects per-post OG tags on /blog/:slug so WhatsApp and Facebook
-# render a real preview card instead of the generic SPA shell.
-[[edge_functions]]
-  path = "/blog/*"
-  function = "blog-meta"
-
-[[redirects]]
-  from = "/admin.html"
-  to = "/admin.html"
-  status = 200
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
