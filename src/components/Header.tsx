@@ -43,9 +43,10 @@ const Header = () => {
 
   const nosotros = [
     { to: '/nosotros', label: t('nav.about') },
-    { to: '/conectate#prayer', label: isSpanish ? 'Oración' : 'Prayer' },
+    { to: '/ministerios', label: t('nav.ministries') },
     { to: '/ministerios#clase-pastorales', label: isSpanish ? 'Clase Pastorales' : 'Pastoral Classes' },
-    { to: '/ministerios#aviva-kids', label: 'Aviva Kids' }
+    { to: '/ministerios#aviva-kids', label: 'Aviva Kids' },
+    { to: '/conectate#prayer', label: isSpanish ? 'Oración' : 'Prayer' }
   ];
 
   const conectate = [
@@ -87,7 +88,6 @@ const Header = () => {
             </div>
           </div>
 
-          <Link to="/ministerios" className="icgg-nav-link" onClick={closeAll}>{t('nav.ministries')}</Link>
           <Link
             to="/en-vivo"
             className={`icgg-nav-live ${live ? 'is-live' : ''}`}
@@ -147,8 +147,24 @@ const Header = () => {
 
       <div className={`icgg-nav-drawer ${isMenuOpen ? 'is-open' : ''}`}>
         <Link to="/" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.home')}</Link>
-        <Link to="/nosotros" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.about')}</Link>
-        <Link to="/ministerios" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.ministries')}</Link>
+        <button
+          type="button"
+          className={`icgg-nav-drawerlink icgg-nav-drawertoggle ${drawerGroup === 'nosotros' ? 'is-open' : ''}`}
+          aria-expanded={drawerGroup === 'nosotros'}
+          onClick={() => setDrawerGroup(g => (g === 'nosotros' ? null : 'nosotros'))}
+        >
+          {t('nav.about')}
+          <ChevronDown className="icgg-nav-drawerchev" />
+        </button>
+        {drawerGroup === 'nosotros' && (
+          <div className="icgg-nav-drawersub">
+            {nosotros.map((item, i) => (
+              <Link key={i} to={item.to} className="icgg-nav-drawersublink" onClick={closeAll}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
         <Link
           to="/en-vivo"
           className={`icgg-nav-drawerlink icgg-nav-drawerlive ${live ? 'is-live' : ''}`}
