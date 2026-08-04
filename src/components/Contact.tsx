@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Send, AlertCircle, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
+const MAX_MESSAGE = 5000;
+
+/**
+ * Public contact form.
+ *
+ * Messages are stored in Supabase and surface in the portal Inbox. There is no
+ * email step, so nothing can be lost to a spam folder. Failures are shown to
+ * the visitor with their text preserved, and a direct mail link remains as a
+ * manual fallback.
+ */
 const Contact = () => {
-  const { t } = useLanguage();
+  const { t, isSpanish } = useLanguage();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
   const { ref: contentRef, isVisible: contentVisible } = useScrollAnimation();
@@ -17,170 +28,79 @@ const Contact = () => {
     email: '',
     phone: '',
     subject: '',
-    message: ''
+    message: '',
+    website: '', // honeypot
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleFormSubmissionWithFallback();
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const isFormValid = () =>
+    formData.name.trim() !== '' &&
+    isValidEmail(formData.email.trim()) &&
+    formData.message.trim() !== '';
+
+  const errorFor = (code: string) => {
+    switch (code) {
+      case 'name_required':
+        return t('contact.errorName');
+      case 'email_invalid':
+        return t('contact.errorEmail');
+      case 'message_required':
+      case 'message_too_long':
+        return t('contact.errorMessage');
+      case 'rate_limited':
+        return t('contact.errorRate');
+      case 'network':
+        return t('contact.errorNetwork');
+      default:
+        return t('contact.errorGeneric');
+    }
   };
 
-  const handleFormSubmission = async () => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!formData.name.trim()) { setError(t('contact.errorName')); return; }
+    if (!isValidEmail(formData.email.trim())) { setError(t('contact.errorEmail')); return; }
+    if (!formData.message.trim()) { setError(t('contact.errorMessage')); return; }
+
     setIsSubmitting(true);
-    setSubmitMessage('');
-    
+
     try {
-      // Use the deployed Supabase function URL
-      const response = await fetch('/api/contact-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      // Fallback to direct Supabase function if the proxy doesn't exist
-      if (!response.ok && response.status === 404) {
-        const supabaseResponse = await fetch('https://your-project.supabase.co/functions/v1/contact-form', {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/contact-form`,
+        {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
-          body: JSON.stringify(formData)
-        });
-        
-        if (supabaseResponse.ok) {
-          setSubmitMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-          setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-        } else {
-          throw new Error('Failed to send message');
+          body: JSON.stringify(formData),
         }
-      } else if (response.ok) {
-        setSubmitMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      );
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data?.ok) {
+        setSent(true);
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
       } else {
-        throw new Error('Failed to send message');
+        // Text stays in the box so nothing typed is thrown away.
+        setError(errorFor(data?.error ?? 'unknown'));
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setSubmitMessage('Hubo un error enviando tu mensaje. Por favor envía un email directamente a info@icgg.us o llámanos.');
+    } catch {
+      setError(errorFor('network'));
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Simple email validation
-  const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
-
-  const isFormValid = () => {
-    return formData.name.trim() && 
-           formData.email.trim() && 
-           isValidEmail(formData.email) &&
-           formData.subject.trim() && 
-           formData.message.trim();
-  };
-
-  // Alternative simple email sending function as fallback
-  const sendEmailDirectly = async () => {
-    const subject = encodeURIComponent(`Contacto desde ICGG.us: ${formData.subject}`);
-    const body = encodeURIComponent(`
-Nombre: ${formData.name}
-Email: ${formData.email}
-${formData.phone ? `Teléfono: ${formData.phone}` : ''}
-
-Mensaje:
-${formData.message}
-    `);
-
-    const mailtoLink = `mailto:icggmedia@gmail.com?subject=${subject}&body=${body}`;
-    window.location.href = mailtoLink;
-  };
-
-  const handleFormSubmissionWithFallback = async () => {
-    if (!isFormValid()) {
-      setSubmitMessage('Por favor completa todos los campos requeridos con información válida.');
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitMessage('');
-
-    try {
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/contact-form`;
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        setSubmitMessage('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto. Bendiciones!');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      } else {
-        throw new Error('Failed to send message');
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-      if (window.confirm('El formulario no pudo ser enviado. ¿Te gustaría abrir tu cliente de email para enviar el mensaje directamente?')) {
-        sendEmailDirectly();
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const originalHandleFormSubmission = async () => {
-    try {
-      // For development/testing, we'll simulate the email being sent
-      console.log('Contact form submission:', formData);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-    } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Hubo un error enviando tu mensaje. Por favor intenta de nuevo o contactanos directamente.');
-    }
-  };
-
-  const oldHandleFormSubmission = async () => {
-    try {
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/contact-form`;
-      
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        alert('¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      } else {
-        throw new Error('Failed to send message');
-      }
-    } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Hubo un error enviando tu mensaje. Por favor intenta de nuevo o contactanos directamente.');
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
   };
 
   return (
@@ -249,7 +169,13 @@ ${formData.message}
           }`}>
             <h3 className="text-3xl font-bold text-gray-900 mb-8">{t('contact.sendMessage')}</h3>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
+            <form onSubmit={handleSubmit} noValidate className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-shadow duration-300">
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input type="text" id="website" name="website" tabIndex={-1}
+                  autoComplete="off" value={formData.website} onChange={handleChange} />
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -262,7 +188,7 @@ ${formData.message}
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder={t('contact.fullNamePlaceholder')}
                   />
                 </div>
@@ -277,7 +203,7 @@ ${formData.message}
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder={t('contact.emailPlaceholder')}
                   />
                 </div>
@@ -294,7 +220,7 @@ ${formData.message}
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="(407) 123-4567"
                   />
                 </div>
@@ -307,7 +233,7 @@ ${formData.message}
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   >
                     <option value="">{t('contact.selectSubject')}</option>
                     <option value="prayer">{t('contact.prayer')}</option>
@@ -330,7 +256,7 @@ ${formData.message}
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                  className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
                   placeholder={t('contact.messagePlaceholder')}
                 ></textarea>
               </div>
@@ -347,31 +273,37 @@ ${formData.message}
                 {isSubmitting ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Enviando...</span>
+                    <span>{isSpanish ? 'Enviando…' : 'Sending…'}</span>
                   </>
                 ) : (
                   <>
                     <Send className="h-5 w-5" />
-                    <span>{t('contact.sendButton')}</span>
+                    <span>{error ? t('contact.retry') : t('contact.sendButton')}</span>
                   </>
                 )}
               </button>
               
-              {/* Success/Error Message */}
-              {submitMessage && (
-                <div className={`mt-4 p-4 rounded-lg ${
-                  submitMessage.includes('Gracias') 
-                    ? 'bg-green-100 text-green-800 border border-green-200' 
-                    : 'bg-red-100 text-red-800 border border-red-200'
-                }`}>
-                  <p className="text-sm">{submitMessage}</p>
+              {sent && (
+                <div className="mt-4 p-4 rounded-lg bg-green-50 border border-green-200 flex gap-3" role="status">
+                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-green-900">{t('contact.success')}</p>
                 </div>
               )}
-              
+
+              {error && (
+                <div className="mt-4 p-4 rounded-lg bg-red-50 border border-red-200 flex gap-3" role="alert">
+                  <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-red-900">{t('contact.errorTitle')}</p>
+                    <p className="text-sm text-red-800 mt-1">{error}</p>
+                  </div>
+                </div>
+              )}
+
               {/* Direct Email Link as Backup */}
               <div className="mt-4 text-center">
                 <p className="text-sm text-gray-600 mb-2">
-                  ¿Prefieres enviarnos un email directamente?
+                  {t('contact.orEmail')}
                 </p>
                 <a
                   href="mailto:icggmedia@gmail.com"

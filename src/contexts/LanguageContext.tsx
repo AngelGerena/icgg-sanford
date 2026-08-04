@@ -383,7 +383,30 @@ const translations = {
   'prayer.submit': { es: 'Enviar Petición', en: 'Submit Request' },
   'prayer.sending': { es: 'Enviando...', en: 'Sending...' },
   'prayer.thankYou': { es: '¡Gracias por compartir!', en: 'Thank you for sharing!' },
-  'prayer.thankYouMessage': { es: 'Hemos recibido tu petición de oración. Estaremos orando por ti.', en: 'We have received your prayer request. We will be praying for you.' }
+  'prayer.thankYouMessage': { es: 'Hemos recibido tu petición de oración. Estaremos orando por ti.', en: 'We have received your prayer request. We will be praying for you.' },
+  'prayer.optional': { es: 'opcional', en: 'optional' },
+  'prayer.anonymous': { es: 'Prefiero enviarla de forma anónima', en: 'I prefer to send this anonymously' },
+  'prayer.anonymousHelp': { es: 'No guardaremos tu nombre ni tu contacto. No podremos responderte directamente.', en: 'We will not store your name or contact. We will not be able to reply directly.' },
+  'prayer.consent': { es: 'Pueden compartir mi petición con la cadena de oración de la iglesia', en: 'You may share my request with the church prayer chain' },
+  'prayer.consentHelp': { es: 'Si no marcas esta casilla, solo el equipo pastoral la verá.', en: 'If you leave this unchecked, only the pastoral team will see it.' },
+  'prayer.errorTitle': { es: 'No pudimos enviar tu petición', en: 'We could not send your request' },
+  'prayer.errorGeneric': { es: 'Algo falló de nuestro lado. Intenta de nuevo en un momento, o llámanos si es urgente.', en: 'Something failed on our end. Please try again in a moment, or call us if it is urgent.' },
+  'prayer.errorNetwork': { es: 'No hay conexión. Revisa tu internet e intenta de nuevo — tu mensaje no se ha perdido.', en: 'No connection. Check your internet and try again — your message has not been lost.' },
+  'prayer.errorMessage': { es: 'Escribe tu petición antes de enviarla.', en: 'Please write your request before sending.' },
+  'prayer.errorEmail': { es: 'Revisa el correo electrónico.', en: 'Please check the email address.' },
+  'prayer.errorRate': { es: 'Ya recibimos varias peticiones tuyas. Espera unos minutos antes de enviar otra.', en: 'We have already received several requests from you. Please wait a few minutes before sending another.' },
+  'prayer.retry': { es: 'Intentar de nuevo', en: 'Try again' },
+  'prayer.charsLeft': { es: 'caracteres restantes', en: 'characters left' },
+  'contact.errorTitle': { es: 'No pudimos enviar tu mensaje', en: 'We could not send your message' },
+  'contact.errorGeneric': { es: 'Algo falló de nuestro lado. Intenta de nuevo en un momento.', en: 'Something failed on our end. Please try again in a moment.' },
+  'contact.errorNetwork': { es: 'No hay conexión. Revisa tu internet e intenta de nuevo — tu mensaje no se ha perdido.', en: 'No connection. Check your internet and try again — your message has not been lost.' },
+  'contact.errorName': { es: 'Escribe tu nombre.', en: 'Please enter your name.' },
+  'contact.errorEmail': { es: 'Revisa el correo electrónico.', en: 'Please check the email address.' },
+  'contact.errorMessage': { es: 'Escribe tu mensaje antes de enviarlo.', en: 'Please write your message before sending.' },
+  'contact.errorRate': { es: 'Ya recibimos varios mensajes tuyos. Espera unos minutos antes de enviar otro.', en: 'We have already received several messages from you. Please wait a few minutes before sending another.' },
+  'contact.retry': { es: 'Intentar de nuevo', en: 'Try again' },
+  'contact.success': { es: '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.', en: 'Thank you for your message. We will be in touch soon.' },
+  'contact.orEmail': { es: '¿Prefieres enviarnos un correo directamente?', en: 'Prefer to email us directly?' }
 };
 
 interface LanguageProviderProps {
