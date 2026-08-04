@@ -149,9 +149,20 @@ const Header = () => {
         <Link to="/" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.home')}</Link>
         <Link to="/nosotros" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.about')}</Link>
         <Link to="/ministerios" className="icgg-nav-drawerlink" onClick={closeAll}>{t('nav.ministries')}</Link>
-        <Link to="/en-vivo" className={`icgg-nav-drawerlink ${live ? 'is-live' : ''}`} onClick={closeAll}>
-          <span className="icgg-nav-livedot" aria-hidden="true" />
-          {t('nav.live')}
+        <Link
+          to="/en-vivo"
+          className={`icgg-nav-drawerlink icgg-nav-drawerlive ${live ? 'is-live' : ''}`}
+          onClick={closeAll}
+        >
+          <span className="icgg-nav-livepill">
+            <span className="icgg-nav-livedot" aria-hidden="true" />
+            <span>{t('nav.live')}</span>
+          </span>
+          {live && (
+            <span className="icgg-nav-livenow">
+              {isSpanish ? 'Transmitiendo ahora' : 'Streaming now'}
+            </span>
+          )}
         </Link>
         <Link to="/predicaciones" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Predicaciones' : 'Sermons'}</Link>
         <Link to="/blog" className="icgg-nav-drawerlink" onClick={closeAll}>{isSpanish ? 'Contra la Corriente' : 'Against the Current'}</Link>

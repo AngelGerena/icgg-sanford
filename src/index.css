@@ -1381,10 +1381,38 @@ section {
   animation: icgg-live-pulse 2s ease-in-out infinite;
 }
 
-.icgg-nav-drawerlink.is-live { color: #ff9d9d; display: flex; align-items: center; gap: .5rem; }
-.icgg-nav-drawerlink.is-live .icgg-nav-livedot {
+/* Drawer version mirrors the desktop pill, with room for a status line */
+.icgg-nav-drawerlive {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+}
+.icgg-nav-livepill {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  padding: .32rem .8rem;
+  font-size: .88rem;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color .2s ease, border-color .2s ease, background-color .2s ease;
+}
+.icgg-nav-drawerlive.is-live .icgg-nav-livepill {
+  color: #ffd9d9;
+  border-color: #E24B4A;
+  background: rgba(226,75,74,0.16);
+}
+.icgg-nav-drawerlive.is-live .icgg-nav-livedot {
   background: #E24B4A;
   animation: icgg-live-pulse 2s ease-in-out infinite;
+}
+.icgg-nav-livenow {
+  font-size: .74rem;
+  color: #ff9d9d;
+  letter-spacing: .01em;
 }
 
 @keyframes icgg-live-pulse {
