@@ -7,6 +7,7 @@ import { toEmbedUrl, fmtDate } from '../lib/video';
 interface Episode {
   id: string;
   episode_no: number | null;
+  sort_order: number | null;
   title_es: string;
   title_en: string | null;
   description_es: string | null;
@@ -30,7 +31,8 @@ const PodcastFeed = () => {
       .from('podcast_episodes')
       .select('*')
       .eq('status', 'published')
-      .order('published_on', { ascending: false, nullsFirst: false })
+      // The running order is set by hand in the portal; date is only a tiebreak.
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('created_at', { ascending: false })
       .then(({ data }) => setEps((data as Episode[]) ?? []));
   }, []);
