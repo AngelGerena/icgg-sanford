@@ -158,6 +158,21 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<'flyer' | 'list'>(defaultView);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showArchive, setShowArchive] = useState(false);
+
+  // Split events into upcoming vs past.
+  // - Weekly recurring events are ALWAYS upcoming (they repeat, they never "conclude").
+  // - Undated events are treated as upcoming (ongoing/all-month things).
+  // - Dated events move to "past" once their day has fully passed (from tomorrow on).
+  const todayStr = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
+  const isPast = (e: EventItem) => !e.is_weekly && !!e.date && e.date < todayStr;
+  const upcomingEvents = events.filter((e) => !isPast(e));
+  const pastEvents = events
+    .filter(isPast)
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '')); // most recent past first
 
   async function shareEvent(e: EventItem) {
     const title = isSpanish ? e.title_es : (e.title_en || e.title_es);
@@ -231,7 +246,7 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
     );
   }
 
-  if (events.length === 0) {
+  if (upcomingEvents.length === 0 && pastEvents.length === 0) {
     return (
       <div className="icgg-feed-empty">
         <Calendar />
@@ -265,7 +280,7 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
       <>
         {toggle}
         <div className="icgg-eventlist">
-          {events.map((e) => {
+          {upcomingEvents.map((e) => {
             const title = isSpanish ? e.title_es : (e.title_en || e.title_es);
             const desc = isSpanish ? e.description : (e.description_en || e.description);
             const dp = dateParts(e.date, e.is_weekly, e.date_label, isSpanish);
@@ -313,7 +328,7 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
     <>
       {toggle}
       <div className={`icgg-feed ${compact ? 'icgg-feed-compact' : ''}`}>
-        {events.map((e) => {
+        {upcomingEvents.map((e) => {
           const title = isSpanish ? e.title_es : (e.title_en || e.title_es);
           const dp = dateParts(e.date, e.is_weekly, e.date_label, isSpanish);
           return (
@@ -354,6 +369,55 @@ const EventsFeed = ({ limit, compact = false, showToggle = false, defaultView = 
           );
         })}
       </div>
+
+      {/* Past events archive — hidden by default, expandable. Only shows on the full
+          events page (not the compact homepage teaser). Flyers are never deleted,
+          just tucked away here once the event date has passed. */}
+      {!compact && !limit && pastEvents.length > 0 && (
+        <div className="icgg-pastevents">
+          <button
+            type="button"
+            className="icgg-pastevents-toggle"
+            onClick={() => setShowArchive((v) => !v)}
+            aria-expanded={showArchive}
+          >
+            <Calendar />
+            {isSpanish
+              ? `Eventos pasados (${pastEvents.length})`
+              : `Past events (${pastEvents.length})`}
+            <span className={`icgg-pastevents-chev ${showArchive ? 'is-open' : ''}`}>▾</span>
+          </button>
+          {showArchive && (
+            <div className="icgg-feed icgg-feed-past">
+              {pastEvents.map((e) => {
+                const title = isSpanish ? e.title_es : (e.title_en || e.title_es);
+                const dp = dateParts(e.date, e.is_weekly, e.date_label, isSpanish);
+                return (
+                  <article key={e.id} className="icgg-flyercard icgg-flyercard-past">
+                    {e.flyer_url ? (
+                      <div className="icgg-flyercard-img">
+                        <img src={e.flyer_url} alt={title} loading="lazy"
+                          onError={(ev) => { (ev.target as HTMLImageElement).parentElement!.style.display = 'none'; }} />
+                      </div>
+                    ) : (
+                      <div className="icgg-flyercard-noimg"><Calendar /></div>
+                    )}
+                    <div className="icgg-flyercard-body">
+                      <span className="icgg-flyercard-date">{dp.full}</span>
+                      <h3 className="icgg-flyercard-title">{title}</h3>
+                      {e.location && (
+                        <div className="icgg-flyercard-meta">
+                          <span><MapPin /> {e.location}</span>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 };

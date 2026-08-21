@@ -1455,3 +1455,25 @@ section {
 }
 .icgg-nav-caret { flex-shrink: 0; }
 .icgg-nav-links { flex-wrap: nowrap; }
+
+/* ===== Past events archive ===== */
+.icgg-pastevents { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(20,38,75,.12); }
+.icgg-pastevents-toggle {
+  display: flex; align-items: center; gap: .6rem; margin: 0 auto;
+  background: #fff; border: 1px solid rgba(20,38,75,.14); border-radius: 999px;
+  padding: .75rem 1.5rem; cursor: pointer; font-family: 'Manrope', sans-serif;
+  font-weight: 600; font-size: .92rem; color: var(--icgg-navy, #14264B);
+  transition: all .18s ease;
+}
+.icgg-pastevents-toggle:hover { border-color: var(--icgg-gold, #C9A961); box-shadow: 0 6px 18px rgba(10,21,48,.08); }
+.icgg-pastevents-toggle svg { width: 17px; height: 17px; color: var(--icgg-gold-deep, #A8884B); }
+.icgg-pastevents-chev { transition: transform .2s ease; font-size: .9rem; }
+.icgg-pastevents-chev.is-open { transform: rotate(180deg); }
+.icgg-feed-past { margin-top: 1.8rem; }
+/* Past flyers read as archived: slightly muted until hovered */
+.icgg-flyercard-past { opacity: .82; transition: opacity .2s ease; }
+.icgg-flyercard-past:hover { opacity: 1; }
+.icgg-flyercard-past .icgg-flyercard-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,21,48,.05), rgba(10,21,48,.12));
+}
