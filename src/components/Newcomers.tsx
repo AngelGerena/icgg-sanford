@@ -5,9 +5,9 @@ import { Users, Heart, Calendar, Gift, MapPin, Coffee, BookOpen, Handshake, Cloc
 
 const Newcomers = () => {
   const { t } = useLanguage();
-  const greeterImg = useSiteImage('newcomers_greeter', '/greeter.png');
+  const greeterImg = useSiteImage('newcomers_greeter', '/greeter.jpg');
   const noraImg = useSiteImage('newcomers_worship', '/nora.JPG');
-  const communityImg = useSiteImage('newcomers_community', '/Community_outreach_in_action_with_joy.png');
+  const communityImg = useSiteImage('newcomers_community', '/Community_outreach_in_action_with_joy.jpg');
 
   return (
     <section id="newcomers" className="py-20 bg-gradient-to-b from-white to-gray-50">

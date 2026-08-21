@@ -9,9 +9,16 @@
   function = "blog-meta"
 
 [[redirects]]
+  from = "/admin"
+  to = "https://admin.icgg.us"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/admin.html"
-  to = "/admin.html"
-  status = 200
+  to = "https://admin.icgg.us"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/*"
